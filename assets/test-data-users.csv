@@ -1,0 +1,6 @@
+email,role,journey,notes
+shopper.new@example.com,customer,new-user,Fresh account for registration and email verification flows
+shopper.returning@example.com,customer,returning-user,Has saved address + order history
+guest.checkout@example.com,customer,guest,Used for guest checkout flows
+admin.ops@example.com,admin,admin,Used for admin panel permissions checks
+
