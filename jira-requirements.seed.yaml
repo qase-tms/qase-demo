@@ -1,0 +1,189 @@
+# Seed requirements for the demo story.
+# Safe to commit: contains NO secrets. Expand freely.
+#
+# Notes:
+# - "slug" is a stable identifier used by scripts to map stories -> epics.
+# - Keep titles realistic and specific; descriptions can be short but non-empty.
+
+epics:
+  - slug: auth
+    summary: "ShopEase: Account & Authentication"
+    description: "Sign-up, login, session security, and password recovery for ShopEase customers."
+
+  - slug: search
+    summary: "ShopEase: Browse & Search"
+    description: "Product discovery, search relevance, filters, and product detail experience."
+
+  - slug: cart
+    summary: "ShopEase: Cart & Promotions"
+    description: "Cart updates, stock validation, discounts, and promotion eligibility."
+
+  - slug: checkout
+    summary: "ShopEase: Checkout & Payments"
+    description: "Address/shipping selection, payment processing, and order confirmation."
+
+  - slug: orders
+    summary: "ShopEase: Orders & Returns"
+    description: "Order history, cancellations, refunds, and return flows."
+
+  - slug: admin
+    summary: "ShopEase: Admin Operations"
+    description: "Catalog and order operations in the ShopEase admin panel."
+
+stories:
+  # Authentication (auth)
+  - epic: auth
+    summary: "User can sign up with email verification"
+    description: "New users can register, receive a verification email, and activate their account."
+    labels: ["demo", "auth", "journey:new-user"]
+
+  - epic: auth
+    summary: "User can log in and maintain a secure session"
+    description: "Login works with correct credentials; sessions expire; suspicious activity is handled."
+    labels: ["demo", "auth", "journey:returning-user"]
+
+  - epic: auth
+    summary: "User can reset password via email token"
+    description: "Password reset email contains a time-limited token; token reuse is rejected."
+    labels: ["demo", "auth"]
+
+  - epic: auth
+    summary: "Account lockout triggers after repeated failed logins"
+    description: "After N failed attempts, the account is locked for a cooldown period with clear messaging."
+    labels: ["demo", "auth", "security"]
+
+  - epic: auth
+    summary: "User can log out from all devices"
+    description: "Global logout invalidates existing sessions and requires re-authentication on next request."
+    labels: ["demo", "auth", "sessions"]
+
+  # Browse & Search (search)
+  - epic: search
+    summary: "Search supports sorting and filter facets"
+    description: "Users can filter by price/brand and sort by relevance/price."
+    labels: ["demo", "search"]
+
+  - epic: search
+    summary: "Product detail page shows variants and stock"
+    description: "PDP displays variants (size/color), price, stock status, and accurate images."
+    labels: ["demo", "pdp"]
+
+  - epic: search
+    summary: "Category browse lists products with pagination"
+    description: "Category pages load consistently and support pagination/infinite scroll."
+    labels: ["demo", "browse"]
+
+  - epic: search
+    summary: "Search handles zero-results and suggests alternatives"
+    description: "When no products match, users see helpful suggestions and category shortcuts."
+    labels: ["demo", "search", "ux"]
+
+  - epic: search
+    summary: "Product images load with fallbacks"
+    description: "Broken image URLs display placeholders; lazy-loading does not block interaction."
+    labels: ["demo", "pdp", "ux"]
+
+  # Cart & Promotions (cart)
+  - epic: cart
+    summary: "Cart quantity updates validate stock"
+    description: "Quantity changes succeed when stock is available and fail with clear messaging otherwise."
+    labels: ["demo", "cart"]
+
+  - epic: cart
+    summary: "Promo code application follows eligibility rules"
+    description: "Promo codes apply only when eligible; invalid/expired codes show correct errors."
+    labels: ["demo", "promotions"]
+
+  - epic: cart
+    summary: "Shipping threshold promotion is applied"
+    description: "Free shipping threshold is applied based on subtotal and updated when cart changes."
+    labels: ["demo", "promotions"]
+
+  - epic: cart
+    summary: "Cart persists across sessions for returning users"
+    description: "Signed-in users see their cart restored after logout/login within retention policy."
+    labels: ["demo", "cart", "journey:returning-user"]
+
+  - epic: cart
+    summary: "Cart merges guest items on login"
+    description: "When a guest logs in, items merge with the user cart without duplication."
+    labels: ["demo", "cart", "journey:guest"]
+
+  # Checkout & Payments (checkout)
+  - epic: checkout
+    summary: "Guest checkout is supported"
+    description: "Users can complete checkout without creating an account; email is required."
+    labels: ["demo", "checkout", "journey:guest"]
+
+  - epic: checkout
+    summary: "Saved addresses can be selected at checkout"
+    description: "Returning users can select, add, and edit addresses during checkout."
+    labels: ["demo", "checkout"]
+
+  - epic: checkout
+    summary: "Card payments succeed/fail with clear error states"
+    description: "Payment failures produce actionable messaging and do not create duplicate orders."
+    labels: ["demo", "payments"]
+
+  - epic: checkout
+    summary: "Checkout validates tax and totals before payment"
+    description: "Order totals (subtotal, tax, shipping, discounts) are consistent across steps."
+    labels: ["demo", "checkout", "risk:high"]
+
+  - epic: checkout
+    summary: "3DS / SCA flow is handled for card payments"
+    description: "If authentication is required, the user is redirected and returns with correct status."
+    labels: ["demo", "payments", "risk:high"]
+
+  # Orders & Returns (orders)
+  - epic: orders
+    summary: "Order appears in order history after purchase"
+    description: "Successful checkout creates an order record visible in history with correct status."
+    labels: ["demo", "orders"]
+
+  - epic: orders
+    summary: "User can initiate a return within policy window"
+    description: "Return requests are allowed within the return window and require a reason selection."
+    labels: ["demo", "returns"]
+
+  - epic: orders
+    summary: "Refund status is visible and updated"
+    description: "Refund processing updates order status and provides timeline visibility."
+    labels: ["demo", "refunds"]
+
+  - epic: orders
+    summary: "Order cancellation is possible before shipment"
+    description: "Users can cancel unshipped orders; cancellation updates status and triggers notification."
+    labels: ["demo", "orders"]
+
+  - epic: orders
+    summary: "Return shipping label is generated when eligible"
+    description: "Eligible returns provide a downloadable label; ineligible returns show policy messaging."
+    labels: ["demo", "returns"]
+
+  # Admin Ops (admin)
+  - epic: admin
+    summary: "Admin can update product price and stock"
+    description: "Catalog updates are audited and reflect on PDP/search promptly."
+    labels: ["demo", "admin", "catalog"]
+
+  - epic: admin
+    summary: "Admin can mark an order as shipped"
+    description: "Shipment status updates order tracking and triggers customer notification."
+    labels: ["demo", "admin", "orders"]
+
+  - epic: admin
+    summary: "Admin roles restrict access to sensitive actions"
+    description: "Only authorized roles can refund/cancel orders; unauthorized attempts are blocked."
+    labels: ["demo", "admin", "permissions"]
+
+  - epic: admin
+    summary: "Admin can create and schedule a promotion"
+    description: "Promotions can be activated/deactivated and scheduled without breaking checkout totals."
+    labels: ["demo", "admin", "promotions"]
+
+  - epic: admin
+    summary: "Admin audit log captures catalog and order actions"
+    description: "Key admin actions are recorded with actor and timestamp for compliance."
+    labels: ["demo", "admin", "audit"]
+

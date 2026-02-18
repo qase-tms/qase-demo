@@ -1,0 +1,8 @@
+country,shipping_method,payment_method,expected_outcome
+US,Standard,Card,Order placed
+US,Express,Card,Order placed
+US,Standard,Card (3DS),Order placed after auth
+EU,Standard,Card,Order placed
+EU,Standard,Card (3DS),Order placed after auth
+US,Standard,Card (decline),Payment error shown, no duplicate order
+

@@ -1,0 +1,116 @@
+project:
+  name: "ShopEase Web App"
+  description: "Living demo workspace for ShopEase e-commerce QA"
+  access: none          # private
+
+custom_fields:
+  - name: "Component"
+    type: selectbox
+    options: [Web UI, Backend API, Payments, Search, Admin]
+  - name: "User Journey"
+    type: selectbox
+    options: [New user, Returning user, Guest, Admin]
+  - name: "Risk"
+    type: selectbox
+    options: [High, Medium, Low]
+  - name: "Automation Track"
+    type: selectbox
+    options: [Not automated, Candidate, Automated]
+  - name: "Test Data Profile"
+    type: multiselect
+    options: [US address, EU address, Out-of-stock, Discount eligible, 3DS required]
+
+milestones:
+  - title: "Sprint 1 – Foundation"
+  - title: "Sprint 2 – Cart & Checkout"
+  - title: "Sprint 3 – Orders & Admin"
+
+environments:
+  - title: Staging
+    slug: staging
+    host: https://staging.shopease.example.com
+  - title: Production
+    slug: production
+    host: https://www.shopease.example.com
+  - title: Development
+    slug: dev
+    host: http://localhost:3000
+  - title: QA
+    slug: qa
+    host: https://qa.shopease.example.com
+  - title: UAT
+    slug: uat
+    host: https://uat.shopease.example.com
+  - title: Performance
+    slug: perf
+    host: https://perf.shopease.example.com
+
+configurations:
+  - group: Browser
+    items: [Chrome, Firefox, Safari, Edge]
+  - group: Device
+    items: [Desktop, Mobile, Tablet]
+  - group: OS
+    items: [Windows, MacOS, Linux, Android, iOS]
+  - group: Network
+    items: [WiFi, 5G, 4G, Offline]
+
+shared_steps:
+  - title: "Login with valid credentials"
+    steps:
+      - action: "Navigate to login page"
+        expected_result: "Login page is displayed"
+      - action: "Enter valid username and password"
+        data: "username: {username}, password: {password}"
+        expected_result: "User is redirected to dashboard"
+  - title: "Add item to cart"
+    steps:
+      - action: "Navigate to product page for {product_name}"
+        expected_result: "Product page for {product_name} is displayed"
+      - action: "Click 'Add to Cart' button"
+        expected_result: "Item count in cart increments by 1"
+  - title: "Complete checkout with default payment"
+    steps:
+      - action: "Navigate to cart and proceed to checkout"
+        expected_result: "Checkout flow initiated"
+      - action: "Fill in required shipping and billing details"
+        data: "Shipping address: {shipping_address}, Billing address: {billing_address}"
+        expected_result: "Order summary is displayed with correct totals"
+      - action: "Click 'Place Order'"
+        expected_result: "Order confirmation page is displayed"
+
+shared_parameters:
+  - name: "TestUserEmail"
+    value: "test@example.com"
+  - name: "TestUserPassword"
+    value: "SecurePass123"
+  - name: "DefaultProductName"
+    value: "ShopEase Widget"
+
+# Maps CSV column names to canonical custom field names
+cf_column_map:
+  cf_6: "Component"
+  cf_7: "User Journey"
+  cf_8: "Risk"
+  cf_9: "Automation Track"
+  cf_10: "Test Data Profile"
+
+# Maps top-level suite names to Jira epic slugs (for requirement linking)
+suite_domain_map:
+  "01 Authentication":   auth
+  "02 Search & Browse":  search
+  "03 Cart & Promotions": cart
+  "04 Checkout":         checkout
+  "05 Orders":           orders
+  "06 Returns & Refunds": orders
+  "07 Admin":            admin
+
+seed:
+  cases_csv: "QD-2026-02-18.csv"
+  seed_value: 42
+
+simulation:
+  history_months: 3
+  pass_rate_range: [0.85, 0.92]
+  weak_suite: "04 Checkout"
+  run_types: [Regression, Feature, Smoke]

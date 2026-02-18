@@ -1,0 +1,42 @@
+{
+  "field_ids": {
+    "Automation Track": 9,
+    "Component": 6,
+    "Risk": 8,
+    "Test Data Profile": 10,
+    "User Journey": 7
+  },
+  "option_ids": {
+    "Automation Track": {
+      "Automated": 3,
+      "Candidate": 2,
+      "Not automated": 1
+    },
+    "Component": {
+      "Admin": 5,
+      "Backend API": 2,
+      "Payments": 3,
+      "Search": 4,
+      "Web UI": 1
+    },
+    "Risk": {
+      "High": 1,
+      "Low": 3,
+      "Medium": 2
+    },
+    "Test Data Profile": {
+      "3DS required": 5,
+      "Discount eligible": 4,
+      "EU address": 2,
+      "Out-of-stock": 3,
+      "US address": 1
+    },
+    "User Journey": {
+      "Admin": 4,
+      "Guest": 3,
+      "New user": 1,
+      "Returning user": 2
+    }
+  },
+  "project_code": "QD"
+}

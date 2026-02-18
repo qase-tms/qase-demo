@@ -1,0 +1,1315 @@
+id,title,description,preconditions,postconditions,tags,priority,severity,type,behavior,automation,status,is_flaky,layer,steps_type,steps_actions,steps_result,steps_data,milestone_id,milestone,suite_id,suite_parent_id,suite,suite_without_cases,parameters,is_muted,cf_6,cf_7,cf_8,cf_9,cf_10
+,,,,,,,,,,,,,,,,,,,,2,,"01 Authentication",1
+,,,,,,,,,,,,,,,,,,,,9,2,Registration,1
+,,,,,,,,,,,,,,,,,,,,11,2,"Login & Sessions",1
+,,,,,,,,,,,,,,,,,,,,12,2,"Password Reset",1
+,,,,,,,,,,,,,,,,,,,,1,,"02 Search & Browse",1
+,,,,,,,,,,,,,,,,,,,,8,1,"Filters & Facets",1
+,,,,,,,,,,,,,,,,,,,,10,1,"Category Browse",1
+,,,,,,,,,,,,,,,,,,,,13,1,"Search Results",1
+,,,,,,,,,,,,,,,,,,,,17,1,"Product Detail (PDP)",1
+,,,,,,,,,,,,,,,,,,,,3,,"03 Cart & Promotions",1
+,,,,,,,,,,,,,,,,,,,,14,3,"Promo Codes",1
+,,,,,,,,,,,,,,,,,,,,18,3,"Cart Persistence & Merge",1
+,,,,,,,,,,,,,,,,,,,,16,3,"Cart Basics",1
+,,,,,,,,,,,,,,,,,,,,6,,"04 Checkout",1
+,,,,,,,,,,,,,,,,,,,,15,6,"Guest Checkout",1
+,,,,,,,,,,,,,,,,,,,,19,6,"Address & Shipping",1
+,,,,,,,,,,,,,,,,,,,,22,6,Payment,1
+,,,,,,,,,,,,,,,,,,,,23,6,Confirmation,1
+,,,,,,,,,,,,,,,,,,,,4,,"05 Orders",1
+,,,,,,,,,,,,,,,,,,,,24,4,"Order History",1
+,,,,,,,,,,,,,,,,,,,,25,4,Cancellation,1
+,,,,,,,,,,,,,,,,,,,,27,4,"Shipment Tracking",1
+,,,,,,,,,,,,,,,,,,,,7,,"06 Returns & Refunds",1
+,,,,,,,,,,,,,,,,,,,,20,7,Returns,1
+,,,,,,,,,,,,,,,,,,,,26,7,"Refund Status",1
+,,,,,,,,,,,,,,,,,,,,5,,"07 Admin",1
+,,,,,,,,,,,,,,,,,,,,21,5,"Catalog Management",1
+,,,,,,,,,,,,,,,,,,,,28,5,"Order Operations",1
+,,,,,,,,,,,,,,,,,,,,29,5,"Roles & Permissions",1
+,,,,,,,,,,,,,,,,,,,,30,5,"Promotions Management",1
+1,"Auth: Negative: Failed Registration with Invalid Email Format","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,negative,automated,actual,no,e2e,classic,"1. Open ShopEase and go to Sign up
+2. Enter a new email and a strong password
+3. Submit registration and open the verification email
+4. Verify the account and confirm the profile is active
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,9,2,Registration,,"Parameters:3DS required
+Parameters:Discount eligible
+Registration Scenario:Invalid Email Format",no,Payments,"New user",Low,Candidate,"3DS required, Discount eligible"
+24,"Auth: Start registration with new email and password","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Open ShopEase and go to Sign up
+2. Enter a new email and a strong password
+","1. 
+2. 
+","1. 
+2. 
+",,,9,2,Registration,,"Parameters:Discount eligible
+Registration Scenario:Successful Registration - New User",no,Payments,Admin,Medium,Candidate,"Discount eligible"
+47,"Auth: Register new user and verify account via email","Validates Backend API behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Open ShopEase and go to Sign up
+2. Enter a new email and a strong password
+3. Submit registration and open the verification email
+4. Verify the account and confirm the profile is active
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,9,2,Registration,,"Parameters:US address
+Registration Scenario:Successful Registration - Email Verification",no,Payments,"New user",Low,Automated,"US address"
+70,"Auth: Negative: Failed Registration with Existing User Email","Validates Backend API behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",medium,major,functional,negative,automated,actual,no,e2e,classic,"1. Open ShopEase and go to Sign up
+2. Enter a new email and a strong password
+3. Submit registration and open the verification email
+4. Verify the account and confirm the profile is active
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,9,2,Registration,,"Parameters:Discount eligible
+Registration Scenario:Existing User Email",no,"Backend API","New user",High,Automated,"Discount eligible"
+93,"Auth: Start registration with new email and password","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",medium,major,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Open ShopEase and go to Sign up
+2. Enter a new email and a strong password
+","1. 
+2. 
+","1. 
+2. 
+",,,9,2,Registration,,"Parameters:EU address
+Parameters:3DS required
+Registration Scenario:Start Registration - EU User",no,Payments,"Returning user",High,Automated,"EU address, 3DS required"
+116,"Auth: Register new user and verify account via email","Validates Admin behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",medium,major,functional,positive,automated,actual,no,e2e,classic,"1. Open ShopEase and go to Sign up
+2. Enter a new email and a strong password
+3. Submit registration and open the verification email
+4. Verify the account and confirm the profile is active
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,9,2,Registration,,"Parameters:EU address
+Parameters:3DS required
+Registration Scenario:Email Verification - EU User",no,"Backend API",Admin,High,Candidate,"EU address, 3DS required"
+2,"Auth: Sign in then sign out clears the session","Validates Web UI behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Open ShopEase and navigate to Login
+2. Sign in as a returning user account
+3. Confirm the user lands on the authenticated area
+4. Sign out and confirm the session is cleared
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,11,2,"Login & Sessions",,"Parameters:3DS required",no,Search,"Returning user",High,Candidate,"3DS required"
+25,"Auth: Sign in and land on authenticated area","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open ShopEase and navigate to Login
+2. Sign in as a admin account
+3. Confirm the user lands on the authenticated area
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,11,2,"Login & Sessions",,"Parameters:3DS required",no,Payments,"New user",Low,Automated,"3DS required"
+48,"Auth: Negative: Sign in and land on authenticated area","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,negative,automated,actual,no,e2e,classic,"1. Open ShopEase and navigate to Login
+2. Sign in as a admin account
+3. Confirm the user lands on the authenticated area
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,11,2,"Login & Sessions",,"Parameters:3DS required",no,"Web UI",Admin,High,Candidate,"3DS required"
+71,"Auth: Negative: Sign in and land on authenticated area","Validates Backend API behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Open ShopEase and navigate to Login
+2. Sign in as a admin account
+","1. 
+2. 
+","1. 
+2. 
+",,,11,2,"Login & Sessions",,"Parameters:EU address
+Parameters:Out-of-stock",no,"Web UI",Guest,High,"Not automated","EU address, Out-of-stock"
+94,"Auth: Sign in then sign out clears the session","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",medium,major,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open ShopEase and navigate to Login
+2. Sign in as a admin account
+3. Confirm the user lands on the authenticated area
+4. Sign out and confirm the session is cleared
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,11,2,"Login & Sessions",,"Parameters:US address
+Parameters:EU address",no,Admin,Admin,Medium,Automated,"US address, EU address"
+117,"Auth: Sign in and land on authenticated area","Validates Search behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Open ShopEase and navigate to Login
+2. Sign in as a guest account
+3. Confirm the user lands on the authenticated area
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,11,2,"Login & Sessions",,"Parameters:Discount eligible",no,Admin,Guest,Low,Candidate,"Discount eligible"
+3,"Auth: Request password reset from login","Validates Backend API behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open Login and select Forgot password
+2. Request a password reset for an existing account
+","1. 
+2. 
+","1. 
+2. 
+",,,12,2,"Password Reset",,"Parameters:EU address
+Parameters:US address",no,Payments,Guest,High,"Not automated","EU address, US address"
+26,"Auth: Complete password reset via email and sign in with new password","Validates Search behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Open Login and select Forgot password
+2. Request a password reset for an existing account
+3. Open the reset email and set a new password
+4. Log in with the new password and confirm success
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,12,2,"Password Reset",,"Parameters:US address",no,Payments,Admin,Medium,"Not automated","US address"
+49,"Auth: Complete password reset via email and sign in with new password","Validates Backend API behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,positive,is-not-automated,actual,no,api,classic,"1. Open Login and select Forgot password
+2. Request a password reset for an existing account
+3. Open the reset email and set a new password
+4. Log in with the new password and confirm success
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,12,2,"Password Reset",,"Parameters:Discount eligible",no,"Web UI",Admin,Medium,Automated,"Discount eligible"
+118,"Auth: Complete password reset via email and sign in with new password","Validates Payments behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Open Login and select Forgot password
+2. Request a password reset for an existing account
+3. Open the reset email and set a new password
+4. Log in with the new password and confirm success
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,12,2,"Password Reset",,"Parameters:EU address",no,Admin,Admin,Low,Candidate,"EU address"
+72,"Auth: Complete password reset via email and sign in with new password","Validates Web UI behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",medium,major,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open Login and select Forgot password
+2. Request a password reset for an existing account
+3. Open the reset email and set a new password
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,12,2,"Password Reset",,Parameters:Out-of-stock,no,Admin,Guest,Low,Candidate,Out-of-stock
+95,"Auth: Complete password reset via email and sign in with new password","Validates Payments behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,yes,e2e,classic,"1. Open Login and select Forgot password
+2. Request a password reset for an existing account
+3. Open the reset email and set a new password
+4. Log in with the new password and confirm success
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,12,2,"Password Reset",,"Parameters:EU address
+Parameters:US address",no,Search,Guest,Low,Automated,"EU address, US address"
+6,"Search: Negative: Apply multiple facets updates search results","Validates Payments behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Run a search for a common product
+2. Apply one filter facet
+3. Apply a second facet and confirm results update
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,8,1,"Filters & Facets",,"Parameters:EU address",no,Search,"Returning user",Medium,Candidate,"EU address"
+29,"Search: Apply a filter facet updates search results","Validates Backend API behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,positive,is-not-automated,actual,no,api,classic,"1. Run a search for a common product
+2. Apply one filter facet
+","1. 
+2. 
+","1. 
+2. 
+",,,8,1,"Filters & Facets",,"Parameters:US address
+Parameters:Out-of-stock",no,"Backend API","New user",Medium,Candidate,"US address, Out-of-stock"
+52,"Search: Apply facets then clear filters restores default results","Validates Web UI behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Run a search for a common product
+2. Apply one filter facet
+3. Apply a second facet and confirm results update
+4. Clear filters and confirm defaults restore
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,8,1,"Filters & Facets",,"Parameters:US address
+Parameters:3DS required",no,Payments,Admin,High,Automated,"US address, 3DS required"
+75,"Search: Apply a filter facet updates search results","Validates Backend API behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Run a search for a common product
+2. Apply one filter facet
+","1. 
+2. 
+","1. 
+2. 
+",,,8,1,"Filters & Facets",,"Parameters:3DS required
+Parameters:US address",no,"Web UI",Admin,High,"Not automated","3DS required, US address"
+98,"Search: Apply multiple facets updates search results","Validates Backend API behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Run a search for a common product
+2. Apply one filter facet
+3. Apply a second facet and confirm results update
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,8,1,"Filters & Facets",,Parameters:Out-of-stock,no,Payments,"New user",Low,"Not automated",Out-of-stock
+4,"Browse: Browse category, open product, return to category with state preserved","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",medium,major,functional,positive,automated,actual,no,api,classic,"1. Open a product category page
+2. Scroll and load more items
+3. Open a product from the list
+4. Return to category and confirm state is preserved
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,10,1,"Category Browse",,"Parameters:Discount eligible
+Parameters:US address",no,Search,"Returning user",High,Candidate,"Discount eligible, US address"
+27,"Browse: Browse category listing and open a product","Validates Backend API behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",medium,major,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open a product category page
+2. Scroll and load more items
+","1. 
+2. 
+","1. 
+2. 
+",,,10,1,"Category Browse",,"Parameters:load more
+Parameters:Out-of-stock
+Parameters:3DS required",no,Payments,"New user",Low,"Not automated","Out-of-stock, 3DS required"
+119,"Browse: Negative: Browse category, open product, return to category with state preserved","Validates Payments behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Open a product category page
+2. Scroll and load more items
+3. Open a product from the list
+4. Return to category and confirm state is preserved
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,10,1,"Category Browse",,"Parameters:US address
+Parameters:EU address",no,Payments,Admin,Low,Automated,"US address, EU address"
+50,"Browse: Browse category listing and open a product","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,api,classic,"1. Open a product category page
+2. Scroll and load more items
+3. Open a product from the list
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,10,1,"Category Browse",,"Parameters:load more
+Parameters:US address",no,Payments,"Returning user",Low,Automated,"US address"
+73,"Browse: Negative: Browse category listing and open a product","Validates Admin behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",medium,major,functional,negative,to-be-automated,actual,no,api,classic,"1. Open a product category page
+2. Scroll and load more items
+3. Open a product from the list
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,10,1,"Category Browse",,"Parameters:load more
+Parameters:US address
+Parameters:EU address",no,Payments,"New user",Low,Automated,"US address, EU address"
+96,"Browse: Browse category, open product, return to category with state preserved","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Open a product category page
+2. Scroll and load more items
+3. Open a product from the list
+4. Return to category and confirm state is preserved
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,10,1,"Category Browse",,"Parameters:US address",no,"Web UI",Guest,Low,Candidate,"US address"
+5,"Search: Search and sort results","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Enter a search query
+2. Apply sort order and review results
+","1. 
+2. 
+","1. 
+2. 
+",,,13,1,"Search Results",,"Parameters:Discount eligible",no,"Web UI","New user",High,Automated,"Discount eligible"
+28,"Search: Negative: Search, sort results, and open a product","Validates Backend API behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Enter a search query
+2. Apply sort order and review results
+3. Open a product from the results
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,13,1,"Search Results",,"Parameters:Discount eligible
+Parameters:Out-of-stock",no,"Web UI","Returning user",High,Candidate,"Discount eligible, Out-of-stock"
+51,"Search: Search and sort results","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Enter a search query
+2. Apply sort order and review results
+","1. 
+2. 
+","1. 
+2. 
+",,,13,1,"Search Results",,"Parameters:EU address
+Parameters:3DS required",no,"Web UI","New user",Low,"Not automated","EU address, 3DS required"
+74,"Search: Search, sort results, and open a product","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Enter a search query
+2. Apply sort order and review results
+3. Open a product from the results
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,13,1,"Search Results",,"Parameters:Out-of-stock
+Parameters:Discount eligible",no,Search,"New user",High,Candidate,"Out-of-stock, Discount eligible"
+97,"Search: Search, sort results, and open a product","Validates Web UI behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Enter a search query
+2. Apply sort order and review results
+3. Open a product from the results
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,13,1,"Search Results",,"Parameters:3DS required",no,"Web UI","Returning user",High,"Not automated","3DS required"
+120,"Search: Refine search query and verify results update","Validates Admin behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",medium,major,functional,positive,automated,actual,no,e2e,classic,"1. Enter a search query
+2. Apply sort order and review results
+3. Open a product from the results
+4. Refine the query and confirm results update
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,13,1,"Search Results",,"Parameters:US address",no,Search,Admin,Low,Automated,"US address"
+7,"PDP: Negative: Add variant to cart and confirm selected variant is retained","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Open a product detail page
+2. Select a variant and review stock status
+3. Add the product to cart
+4. Confirm cart reflects the selected variant
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,17,1,"Product Detail (PDP)",,"Parameters:Discount eligible",no,Search,Admin,High,Automated,"Discount eligible"
+30,"PDP: Select variant and add product to cart","Validates Backend API behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Open a product detail page
+2. Select a variant and review stock status
+3. Add the product to cart
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,17,1,"Product Detail (PDP)",,"Parameters:Discount eligible",no,"Backend API","Returning user",Low,"Not automated","Discount eligible"
+53,"PDP: Negative: Add variant to cart and confirm selected variant is retained","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",medium,major,functional,negative,to-be-automated,actual,no,e2e,classic,"1. Open a product detail page
+2. Select a variant and review stock status
+3. Add the product to cart
+4. Confirm cart reflects the selected variant
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,17,1,"Product Detail (PDP)",,"Parameters:US address
+Parameters:3DS required",no,Payments,"Returning user",Low,Automated,"US address, 3DS required"
+76,"PDP: Negative: Select variant and add product to cart","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,negative,to-be-automated,actual,no,api,classic,"1. Open a product detail page
+2. Select a variant and review stock status
+3. Add the product to cart
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,17,1,"Product Detail (PDP)",,"Parameters:US address
+Parameters:Out-of-stock",no,Search,Guest,Low,"Not automated","US address, Out-of-stock"
+99,"PDP: Add variant to cart and confirm selected variant is retained","Validates Web UI behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open a product detail page
+2. Select a variant and review stock status
+3. Add the product to cart
+4. Confirm cart reflects the selected variant
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,17,1,"Product Detail (PDP)",,"Parameters:US address",no,"Backend API","Returning user",Medium,"Not automated","US address"
+22,"Cart: Apply Expired Promo Code and Verify Error Message","Validates Admin behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",low,minor,functional,positive,to-be-automated,actual,no,api,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,14,3,"Promo Codes",,"Parameters:3DS required",no,"Web UI","Returning user",High,"Not automated","3DS required"
+79,"Cart: Apply then remove promo code updates totals","Validates Payments behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,automated,actual,no,api,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+4. Remove the promo and confirm totals revert
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,14,3,"Promo Codes",,"Parameters:Discount eligible",no,"Web UI","Returning user",High,Candidate,"Discount eligible"
+10,"Cart: Apply Valid Promo Code and Verify Discount Application","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,14,3,"Promo Codes",,Parameters:Out-of-stock,no,Payments,"Returning user",Low,Automated,Out-of-stock
+45,"Cart: Apply then remove promo code updates totals","Validates Web UI behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,api,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+4. Remove the promo and confirm totals revert
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,14,3,"Promo Codes",,"Parameters:3DS required
+Parameters:Discount eligible",no,Admin,Guest,Low,Candidate,"3DS required, Discount eligible"
+33,"Cart: Negative: Apply then remove promo code updates totals","Validates Payments behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,negative,automated,actual,no,e2e,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+4. Remove the promo and confirm totals revert
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,14,3,"Promo Codes",,"Parameters:Out-of-stock
+Parameters:EU address",no,Payments,"New user",Low,"Not automated","Out-of-stock, EU address"
+68,"Cart: Apply promo code updates discount and totals","Validates Search behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,api,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,14,3,"Promo Codes",,"Parameters:3DS required",no,"Web UI",Guest,High,"Not automated","3DS required"
+56,"Cart: Negative: Apply promo code updates discount and totals","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,negative,to-be-automated,actual,no,api,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+","1. 
+2. 
+","1. 
+2. 
+",,,14,3,"Promo Codes",,"Parameters:Out-of-stock
+Parameters:Discount eligible",no,"Web UI","Returning user",Medium,Candidate,"Out-of-stock, Discount eligible"
+91,"Cart: Negative: Apply then remove promo code updates totals","Validates Admin behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",low,minor,functional,negative,to-be-automated,actual,no,e2e,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+4. Remove the promo and confirm totals revert
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,14,3,"Promo Codes",,"Parameters:US address
+Parameters:Out-of-stock",no,"Web UI",Admin,Medium,Candidate,"US address, Out-of-stock"
+114,"Cart: Negative: Apply promo code updates discount and totals","Validates Backend API behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,negative,automated,actual,no,e2e,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,14,3,"Promo Codes",,"Parameters:US address",no,"Backend API","Returning user",High,Automated,"US address"
+102,"Cart: Negative: Apply then remove promo code updates totals","Validates Search behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",low,minor,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Add eligible items to the cart
+2. Apply a promo code
+3. Confirm discount and totals update
+4. Remove the promo and confirm totals revert
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,14,3,"Promo Codes",,"Parameters:Discount eligible",no,Admin,Admin,High,Candidate,"Discount eligible"
+9,"Cart: Merge guest cart into user cart on login","Validates Admin behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Add an item to cart as a guest
+2. Log in to an existing account
+3. Confirm guest cart items merge into the user cart
+4. Refresh and confirm cart remains consistent
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,18,3,"Cart Persistence & Merge",,"Parameters:Discount eligible",no,"Web UI","New user",Medium,"Not automated","Discount eligible"
+32,"Cart: Negative: Merge guest cart into user cart on login","Validates Backend API behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Add an item to cart as a guest
+2. Log in to an existing account
+3. Confirm guest cart items merge into the user cart
+4. Refresh and confirm cart remains consistent
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,18,3,"Cart Persistence & Merge",,"Parameters:Discount eligible
+Parameters:3DS required",no,Payments,Admin,High,"Not automated","Discount eligible, 3DS required"
+55,"Cart: Negative: Guest cart persists after login","Validates Payments behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,negative,automated,actual,no,e2e,classic,"1. Add an item to cart as a guest
+2. Log in to an existing account
+","1. 
+2. 
+","1. 
+2. 
+",,,18,3,"Cart Persistence & Merge",,Parameters:Out-of-stock,no,"Web UI","New user",Low,"Not automated",Out-of-stock
+78,"Cart: Guest cart persists after login","Validates Search behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",low,minor,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Add an item to cart as a guest
+2. Log in to an existing account
+","1. 
+2. 
+","1. 
+2. 
+",,,18,3,"Cart Persistence & Merge",,Parameters:Out-of-stock,no,"Web UI",Guest,Low,Automated,Out-of-stock
+101,"Cart: Negative: Guest cart persists after login","Validates Admin behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",medium,major,functional,negative,automated,actual,no,e2e,classic,"1. Add an item to cart as a guest
+2. Log in to an existing account
+","1. 
+2. 
+","1. 
+2. 
+",,,18,3,"Cart Persistence & Merge",,"Parameters:EU address
+Parameters:3DS required",no,Payments,Guest,High,"Not automated","EU address, 3DS required"
+8,"Cart: Negative: Update cart quantity and remove item empties cart","Validates Search behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",medium,major,functional,negative,to-be-automated,actual,no,e2e,classic,"1. Add a product to the cart
+2. Change quantity and confirm totals update
+3. Remove the item and confirm cart is empty
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,16,3,"Cart Basics",,"Parameters:EU address
+Parameters:Out-of-stock",no,"Backend API",Admin,High,Automated,"EU address, Out-of-stock"
+31,"Cart: Update cart quantity and remove item empties cart","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,is-not-automated,actual,no,api,classic,"1. Add a product to the cart
+2. Change quantity and confirm totals update
+3. Remove the item and confirm cart is empty
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,16,3,"Cart Basics",,Parameters:Out-of-stock,no,Admin,Guest,Low,Candidate,Out-of-stock
+54,"Cart: Update cart items recalculates totals","Validates Search behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Add a product to the cart
+2. Change quantity and confirm totals update
+3. Remove the item and confirm cart is empty
+4. Add a different item and confirm totals recalculate
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,16,3,"Cart Basics",,"Parameters:qty
+Parameters:remove
+Parameters:add different
+Parameters:Discount eligible",no,Admin,Admin,Medium,Automated,"Discount eligible"
+77,"Cart: Update cart quantity and remove item empties cart","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",medium,major,functional,positive,to-be-automated,actual,no,api,classic,"1. Add a product to the cart
+2. Change quantity and confirm totals update
+3. Remove the item and confirm cart is empty
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,16,3,"Cart Basics",,"Parameters:US address",no,Admin,Admin,High,"Not automated","US address"
+100,"Cart: Update cart quantity updates totals","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,positive,is-not-automated,actual,no,api,classic,"1. Add a product to the cart
+2. Change quantity and confirm totals update
+","1. 
+2. 
+","1. 
+2. 
+",,,16,3,"Cart Basics",,"Parameters:3DS required",no,Search,"New user",High,"Not automated","3DS required"
+11,"Checkout: Guest checkout enters email and proceeds","Validates Payments behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Add items to cart and proceed to checkout
+2. Continue as guest and enter checkout email
+3. Enter address and select shipping
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,15,6,"Guest Checkout",,"Parameters:EU address",no,Payments,Guest,High,Automated,"EU address"
+34,"Checkout: Guest checkout end-to-end","Validates Admin behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",low,minor,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Add items to cart and proceed to checkout
+2. Continue as guest and enter checkout email
+3. Enter address and select shipping
+4. Enter payment details and place the order
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,15,6,"Guest Checkout",,"Parameters:address
+Parameters:shipping
+Parameters:payment
+Parameters:place order
+Parameters:US address",no,Payments,Admin,High,Candidate,"US address"
+103,"Checkout: Guest checkout enters email and proceeds","Validates Search behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Add items to cart and proceed to checkout
+2. Continue as guest and enter checkout email
+","1. 
+2. 
+","1. 
+2. 
+",,,15,6,"Guest Checkout",,"Parameters:Out-of-stock
+Parameters:3DS required",no,Search,Admin,Low,Automated,"Out-of-stock, 3DS required"
+57,"Checkout: Negative: Guest checkout enters email and proceeds","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,negative,automated,actual,no,api,classic,"1. Add items to cart and proceed to checkout
+2. Continue as guest and enter checkout email
+3. Enter address and select shipping
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,15,6,"Guest Checkout",,Parameters:Out-of-stock,no,"Backend API",Guest,Low,"Not automated",Out-of-stock
+80,"Checkout: Negative: Guest checkout enters email and proceeds","Validates Backend API behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",medium,major,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Add items to cart and proceed to checkout
+2. Continue as guest and enter checkout email
+3. Enter address and select shipping
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,15,6,"Guest Checkout",,"Parameters:EU address",no,Admin,"New user",Medium,Automated,"EU address"
+12,"Checkout: Select address and shipping method during checkout","Validates Web UI behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Proceed to checkout from the cart
+2. Select or add a delivery address
+3. Choose a shipping method
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,19,6,"Address & Shipping",,"Parameters:US address
+Parameters:3DS required",no,"Web UI","New user",High,Automated,"US address, 3DS required"
+35,"Checkout: Select or add delivery address during checkout","Validates Search behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Proceed to checkout from the cart
+2. Select or add a delivery address
+","1. 
+2. 
+","1. 
+2. 
+",,,19,6,"Address & Shipping",,"Parameters:US address
+Parameters:EU address",no,"Web UI","New user",High,Candidate,"US address, EU address"
+58,"Checkout: Select or add delivery address during checkout","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Proceed to checkout from the cart
+2. Select or add a delivery address
+","1. 
+2. 
+","1. 
+2. 
+",,,19,6,"Address & Shipping",,"Parameters:Discount eligible",no,Search,Admin,High,Candidate,"Discount eligible"
+81,"Checkout: Select address and shipping method during checkout","Validates Search behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Proceed to checkout from the cart
+2. Select or add a delivery address
+3. Choose a shipping method
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,19,6,"Address & Shipping",,"Parameters:EU address",no,Payments,Guest,Medium,"Not automated","EU address"
+104,"Checkout: Select or add delivery address during checkout","Validates Payments behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Proceed to checkout from the cart
+2. Select or add a delivery address
+","1. 
+2. 
+","1. 
+2. 
+",,,19,6,"Address & Shipping",,"Parameters:US address
+Parameters:Discount eligible",no,Admin,"Returning user",Medium,Automated,"US address, Discount eligible"
+13,"Checkout: Pay by card at checkout","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,api,classic,"1. Proceed to the payment step in checkout
+2. Enter card details
+","1. 
+2. 
+","1. 
+2. 
+",,,22,6,Payment,,Parameters:Out-of-stock,no,"Web UI",Admin,Low,Candidate,Out-of-stock
+36,"Checkout: Pay by card at checkout","Validates Web UI behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Proceed to the payment step in checkout
+2. Enter card details
+","1. 
+2. 
+","1. 
+2. 
+",,,22,6,Payment,,"Parameters:Discount eligible
+Parameters:3DS required",no,Search,Admin,Low,Candidate,"Discount eligible, 3DS required"
+59,"Checkout: Pay by card at checkout","Validates Admin behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",low,minor,functional,positive,to-be-automated,actual,no,api,classic,"1. Proceed to the payment step in checkout
+2. Enter card details
+","1. 
+2. 
+","1. 
+2. 
+",,,22,6,Payment,,"Parameters:EU address
+Parameters:3DS required",no,"Web UI","New user",Low,Automated,"EU address, 3DS required"
+82,"Checkout: Negative: Pay by card with 3DS authentication","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,negative,automated,actual,no,e2e,classic,"1. Proceed to the payment step in checkout
+2. Enter card details
+3. Complete additional authentication if prompted
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,22,6,Payment,,"Parameters:US address
+Parameters:EU address",no,"Backend API",Guest,Low,"Not automated","US address, EU address"
+105,"Checkout: Pay by card at checkout","Validates Search behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Proceed to the payment step in checkout
+2. Enter card details
+","1. 
+2. 
+","1. 
+2. 
+",,,22,6,Payment,,"Parameters:Out-of-stock
+Parameters:Discount eligible",no,Admin,"Returning user",High,Automated,"Out-of-stock, Discount eligible"
+14,"Checkout: Capture order number on confirmation","Validates Admin behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Complete checkout successfully
+2. Capture the order number on the confirmation page
+","1. 
+2. 
+","1. 
+2. 
+",,,23,6,Confirmation,,"Parameters:Discount eligible
+Parameters:3DS required",no,"Backend API",Admin,Low,"Not automated","Discount eligible, 3DS required"
+37,"Orders: Capture order number and verify it appears in order history","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Complete checkout successfully
+2. Capture the order number on the confirmation page
+3. Confirm the order appears in order history
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,23,6,Confirmation,,"Parameters:EU address",no,Payments,"Returning user",Medium,Automated,"EU address"
+60,"Checkout: Capture order number on confirmation","Validates Admin behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",low,minor,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Complete checkout successfully
+2. Capture the order number on the confirmation page
+","1. 
+2. 
+","1. 
+2. 
+",,,23,6,Confirmation,,"Parameters:US address",no,"Web UI","Returning user",Medium,Candidate,"US address"
+83,"Checkout: Capture order number on confirmation","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",medium,major,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Complete checkout successfully
+2. Capture the order number on the confirmation page
+","1. 
+2. 
+","1. 
+2. 
+",,,23,6,Confirmation,,Parameters:Out-of-stock,no,"Web UI",Guest,Low,Candidate,Out-of-stock
+106,"Orders: Negative: Capture order number and verify it appears in order history","Validates Web UI behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,negative,automated,actual,no,e2e,classic,"1. Complete checkout successfully
+2. Capture the order number on the confirmation page
+3. Confirm the order appears in order history
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,23,6,Confirmation,,"Parameters:US address",no,Admin,"New user",Low,Candidate,"US address"
+15,"Orders: Open latest order and verify items and totals","Validates Backend API behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Sign in and open Order history
+2. Open the latest order
+3. Confirm items and totals match the order
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,24,4,"Order History",,Parameters:Out-of-stock,no,"Web UI","New user",Low,Automated,Out-of-stock
+38,"Orders: Open latest order from order history","Validates Backend API behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",medium,major,functional,positive,automated,actual,no,e2e,classic,"1. Sign in and open Order history
+2. Open the latest order
+","1. 
+2. 
+","1. 
+2. 
+",,,24,4,"Order History",,"Parameters:Discount eligible",no,"Backend API",Guest,Low,"Not automated","Discount eligible"
+61,"Orders: Open latest order and verify items and totals","Validates Admin behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",low,minor,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Sign in and open Order history
+2. Open the latest order
+3. Confirm items and totals match the order
+4. Confirm order status is correct
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,24,4,"Order History",,"Parameters:US address
+Parameters:Out-of-stock",no,Payments,Admin,High,Automated,"US address, Out-of-stock"
+84,"Orders: Open latest order and verify items and totals","Validates Admin behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",medium,major,functional,positive,automated,actual,no,e2e,classic,"1. Sign in and open Order history
+2. Open the latest order
+3. Confirm items and totals match the order
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,24,4,"Order History",,"Parameters:US address",no,"Backend API","New user",Low,Automated,"US address"
+107,"Orders: Open latest order and verify items and totals","Validates Admin behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Sign in and open Order history
+2. Open the latest order
+3. Confirm items and totals match the order
+4. Confirm order status is correct
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,24,4,"Order History",,Parameters:Out-of-stock,no,Admin,"New user",Medium,Automated,Out-of-stock
+16,"Orders: Request cancellation for an unshipped order","Validates Admin behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Open an unshipped order
+2. Request cancellation
+3. Confirm cancellation
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,25,4,Cancellation,,Parameters:Out-of-stock,no,Payments,"Returning user",Low,"Not automated",Out-of-stock
+39,"Orders: Request cancellation for an unshipped order","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Open an unshipped order
+2. Request cancellation
+3. Confirm cancellation
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,25,4,Cancellation,,"Parameters:Out-of-stock
+Parameters:Discount eligible",no,Payments,Guest,High,Automated,"Out-of-stock, Discount eligible"
+62,"Orders: Negative: Request cancellation for an unshipped order","Validates Payments behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",medium,major,functional,negative,is-not-automated,actual,no,e2e,classic,"1. Open an unshipped order
+2. Request cancellation
+","1. 
+2. 
+","1. 
+2. 
+",,,25,4,Cancellation,,"Parameters:3DS required",no,Search,Guest,Low,"Not automated","3DS required"
+85,"Orders: Request cancellation for an unshipped order","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Open an unshipped order
+2. Request cancellation
+3. Confirm cancellation
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,25,4,Cancellation,,"Parameters:3DS required
+Parameters:Out-of-stock",no,"Backend API","Returning user",Medium,"Not automated","3DS required, Out-of-stock"
+108,"Orders: Cancel unshipped order and verify status updates","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Open an unshipped order
+2. Request cancellation
+3. Confirm cancellation
+4. Verify order status updates to Cancelled
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,25,4,Cancellation,,Parameters:Out-of-stock,no,Search,"Returning user",Low,Automated,Out-of-stock
+17,"Orders: Open shipment tracking details and verify tracking link","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open a shipped order
+2. Open tracking details
+","1. 
+2. 
+","1. 
+2. 
+",,,27,4,"Shipment Tracking",,"Parameters:US address
+Parameters:Discount eligible",no,Search,Guest,Medium,Candidate,"US address, Discount eligible"
+40,"Orders: Open shipment tracking details and verify tracking link","Validates Search behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Open a shipped order
+2. Open tracking details
+","1. 
+2. 
+","1. 
+2. 
+",,,27,4,"Shipment Tracking",,"Parameters:US address",no,Search,"Returning user",High,Automated,"US address"
+63,"Orders: Negative: Open shipment tracking details and verify tracking link","Validates Backend API behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,risk:high,jira:",high,critical,functional,negative,automated,actual,no,e2e,classic,"1. Open a shipped order
+2. Open tracking details
+3. Verify tracking link opens correctly
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,27,4,"Shipment Tracking",,"Parameters:3DS required",no,"Backend API","Returning user",Low,"Not automated","3DS required"
+86,"Orders: Open shipment tracking details and verify tracking link","Validates Web UI behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Open a shipped order
+2. Open tracking details
+3. Verify tracking link opens correctly
+4. Confirm shipment status matches tracking state
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,27,4,"Shipment Tracking",,"Parameters:3DS required",no,"Web UI",Admin,Low,Automated,"3DS required"
+109,"Orders: Open shipment tracking details and verify tracking link","Validates Search behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",medium,major,functional,positive,automated,actual,no,api,classic,"1. Open a shipped order
+2. Open tracking details
+3. Verify tracking link opens correctly
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,27,4,"Shipment Tracking",,"Parameters:Discount eligible
+Parameters:3DS required",no,"Backend API",Admin,Medium,Automated,"Discount eligible, 3DS required"
+18,"Returns: Start a return request for an eligible order","Validates Search behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,api,classic,"1. Open an eligible order
+2. Start a return request
+3. Select a return reason and submit
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,20,7,Returns,,Parameters:Out-of-stock,no,Payments,Admin,High,Automated,Out-of-stock
+41,"Returns: Start a return request for an eligible order","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,positive,to-be-automated,actual,no,api,classic,"1. Open an eligible order
+2. Start a return request
+3. Select a return reason and submit
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,20,7,Returns,,"Parameters:EU address",no,"Backend API","New user",Medium,Candidate,"EU address"
+64,"Returns: Create return request with reason and verify label availability","Validates Web UI behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",medium,major,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open an eligible order
+2. Start a return request
+3. Select a return reason and submit
+4. Confirm return is created and label is available
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,20,7,Returns,,"Parameters:Discount eligible
+Parameters:EU address",no,"Backend API",Admin,Low,Automated,"Discount eligible, EU address"
+87,"Returns: Start a return request for an eligible order","Validates Backend API behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",medium,major,functional,positive,to-be-automated,actual,yes,e2e,classic,"1. Open an eligible order
+2. Start a return request
+","1. 
+2. 
+","1. 
+2. 
+",,,20,7,Returns,,"Parameters:US address
+Parameters:Out-of-stock",no,Payments,"Returning user",High,"Not automated","US address, Out-of-stock"
+110,"Returns: Create return request with reason and verify label availability","Validates Backend API behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",low,minor,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Open an eligible order
+2. Start a return request
+3. Select a return reason and submit
+4. Confirm return is created and label is available
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,20,7,Returns,,"Parameters:US address
+Parameters:3DS required",no,Admin,Admin,Medium,Candidate,"US address, 3DS required"
+19,"Orders: View refund-in-progress status updates","Validates Search behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open an order with a refund in progress
+2. Review refund status
+3. Confirm status updates are visible
+4. Confirm final state matches refund outcome
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,26,7,"Refund Status",,"Parameters:Out-of-stock
+Parameters:3DS required",no,Payments,"New user",High,Automated,"Out-of-stock, 3DS required"
+42,"Orders: View refund-in-progress status updates","Validates Search behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Open an order with a refund in progress
+2. Review refund status
+3. Confirm status updates are visible
+4. Confirm final state matches refund outcome
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,26,7,"Refund Status",,Parameters:Out-of-stock,no,Search,Guest,Medium,Automated,Out-of-stock
+65,"Orders: View refund-in-progress status updates","Validates Search behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Open an order with a refund in progress
+2. Review refund status
+3. Confirm status updates are visible
+4. Confirm final state matches refund outcome
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,26,7,"Refund Status",,"Parameters:US address",no,Payments,"New user",High,Automated,"US address"
+88,"Orders: View refund-in-progress status updates","Validates Admin behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Open an order with a refund in progress
+2. Review refund status
+3. Confirm status updates are visible
+4. Confirm final state matches refund outcome
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,26,7,"Refund Status",,"Parameters:3DS required",no,"Backend API",Admin,Low,"Not automated","3DS required"
+111,"Orders: View refund-in-progress status updates","Validates Admin behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",medium,major,functional,positive,automated,actual,no,api,classic,"1. Open an order with a refund in progress
+2. Review refund status
+3. Confirm status updates are visible
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,26,7,"Refund Status",,"Parameters:EU address
+Parameters:Discount eligible",no,"Backend API","Returning user",Medium,Automated,"EU address, Discount eligible"
+21,"Admin: Access product catalog & verify inventory display","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+","1. 
+2. 
+","1. 
+2. 
+",,,21,5,"Catalog Management",,"Parameters:Discount eligible",no,"Web UI",Admin,High,"Not automated","Discount eligible"
+113,"Admin: View system settings & verify configuration options","Validates Payments behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+","1. 
+2. 
+","1. 
+2. 
+",,,21,5,"Catalog Management",,"Parameters:Discount eligible",no,Search,"New user",High,"Not automated","Discount eligible"
+46,"Admin: Adjust product pricing & confirm global catalog update","Validates Payments behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",medium,major,functional,positive,automated,actual,no,api,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,21,5,"Catalog Management",,"Parameters:EU address",no,"Web UI",Admin,High,"Not automated","EU address"
+23,"Admin: Navigate to customer management & view user list","Validates Search behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+","1. 
+2. 
+","1. 
+2. 
+",,,21,5,"Catalog Management",,"Parameters:EU address
+Parameters:Discount eligible",no,Admin,"Returning user",High,Automated,"EU address, Discount eligible"
+20,"Admin: Update order status to 'shipped' & confirm notification","Validates Web UI behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,automated,actual,no,api,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+4. Verify changes are reflected in the system
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,28,5,"Order Operations",,"Parameters:3DS required
+Parameters:Discount eligible",no,Search,"Returning user",Medium,Candidate,"3DS required, Discount eligible"
+43,"Admin: Navigate to order history & search for specific order","Validates Admin behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:admin,jira:",low,minor,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+","1. 
+2. 
+","1. 
+2. 
+",,,28,5,"Order Operations",,"Parameters:US address
+Parameters:Discount eligible",no,Search,Guest,High,"Not automated","US address, Discount eligible"
+92,"Admin: Generate sales report for previous quarter & download","Validates Search behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",medium,major,functional,positive,to-be-automated,actual,no,api,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+4. Verify changes are reflected in the system
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,28,5,"Order Operations",,"Parameters:US address",no,Search,"New user",High,"Not automated","US address"
+112,"Admin: Update shipping carrier information & verify logistics integration","Validates Backend API behavior for returning user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:backend-api,jira:",medium,major,functional,positive,is-not-automated,actual,no,api,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+4. Verify changes are reflected in the system
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,28,5,"Order Operations",,"Parameters:EU address
+Parameters:Out-of-stock",no,Payments,Admin,Medium,Candidate,"EU address, Out-of-stock"
+69,"Admin: Suspend user account & verify login restriction","Validates Payments behavior for new user scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,jira:",low,minor,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,29,5,"Roles & Permissions",,"Parameters:3DS required",no,"Web UI",Admin,High,Automated,"3DS required"
+90,"Admin: Archive old orders & verify data retention policy","Validates Search behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,risk:high,jira:",high,critical,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,29,5,"Roles & Permissions",,"Parameters:3DS required",no,Admin,"Returning user",Low,Candidate,"3DS required"
+115,"Admin: Attempt unauthorized access to restricted section & verify denial","Validates Search behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",low,minor,functional,negative,to-be-automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+","1. 
+2. 
+","1. 
+2. 
+",,,29,5,"Roles & Permissions",,"Parameters:EU address",no,"Web UI","New user",High,Candidate,"EU address"
+66,"Admin: Access promotions section & review active campaigns","Validates Payments behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:payments,risk:high,jira:",high,critical,functional,positive,automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+","1. 
+2. 
+","1. 
+2. 
+",,,30,5,"Promotions Management",,"Parameters:Discount eligible",no,Payments,Admin,Low,Candidate,"Discount eligible"
+67,"Admin: Create new discount code & verify applicability","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,risk:high,jira:",high,critical,functional,positive,is-not-automated,actual,no,api,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+4. Verify changes are reflected in the system
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,30,5,"Promotions Management",,"Parameters:Discount eligible
+Parameters:US address",no,Search,"New user",High,Automated,"Discount eligible, US address"
+44,"Admin: Process customer return for eligible item & initiate refund","Validates Search behavior for guest scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:search,jira:",medium,major,functional,positive,to-be-automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+","1. 
+2. 
+3. 
+","1. 
+2. 
+3. 
+",,,30,5,"Promotions Management",,"Parameters:EU address",no,"Backend API","New user",Low,"Not automated","EU address"
+89,"Admin: Manage product reviews & moderate user comments","Validates Web UI behavior for admin scenarios.","Seeded demo users exist (see attached CSV) and API is reachable.","No persistent side effects beyond demo data; cleanup not required.","demo,component:web-ui,jira:",low,minor,functional,positive,automated,actual,no,e2e,classic,"1. Sign in to ShopEase Admin
+2. Navigate to the relevant admin section
+3. Perform the admin action and save changes
+4. Verify changes are reflected in the system
+","1. 
+2. 
+3. 
+4. 
+","1. 
+2. 
+3. 
+4. 
+",,,30,5,"Promotions Management",,Parameters:Out-of-stock,no,Admin,Guest,High,"Not automated",Out-of-stock

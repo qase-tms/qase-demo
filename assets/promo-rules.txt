@@ -1,0 +1,8 @@
+ShopEase promotions (demo)
+
+- PROMO10: 10% off orders >= $50, excludes gift cards.
+- FREESHIP: free standard shipping for orders >= $40 (US only).
+- WELCOME5: $5 off first purchase, one-time use per account.
+
+This file is intentionally generic for demo attachments.
+
