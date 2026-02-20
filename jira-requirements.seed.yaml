@@ -8,182 +8,711 @@
 epics:
   - slug: auth
     summary: "ShopEase: Account & Authentication"
-    description: "Sign-up, login, session security, and password recovery for ShopEase customers."
+    description: >
+      This epic governs the entire customer identity lifecycle within the ShopEase platform, covering the complete journey from anonymous visitor to authenticated, trusted account holder. The scope includes registration, email verification, login flows, session lifecycle management, password resets, lockouts, global logout, security notifications, anomaly detection, and audit logging. The goal is to ensure that authentication behaves predictably, securely, and transparently while maintaining a friction-minimized experience for legitimate users.
 
+      Registration must enforce uniqueness constraints on email addresses while allowing for safe retries when users partially complete sign-up flows. Password strength requirements must follow modern best practices, including entropy-based validation, rejection of commonly breached passwords, and clear real-time guidance during entry. Email verification links must contain cryptographically secure, single-use tokens that expire after a configurable window. Token replay attempts must be rejected and logged. If a verification link expires, the system must allow regeneration without exposing whether an account exists to malicious actors.
+
+      Login flows must issue time-bound access tokens and secure refresh tokens, ensuring idle timeout enforcement and maximum session lifetime constraints. Sessions should rotate identifiers periodically to reduce fixation risk. Concurrent sessions across devices must be tracked and manageable, enabling users to review and terminate active sessions. Suspicious login patterns such as impossible travel, unusual IP reputation, or repeated credential stuffing attempts should trigger adaptive authentication measures including CAPTCHA, rate limiting, or step-up verification.
+
+      Password reset processes must invalidate prior sessions upon completion and must not disclose account existence during request initiation. Reset tokens must be cryptographically strong, single-use, and expire quickly. Lockout policies must balance brute-force prevention with user convenience by implementing progressive backoff rather than permanent bans. All authentication-related state transitions must be audit logged with actor identifiers, timestamps, IP metadata, and outcome classification.
+
+      User messaging across all flows must be precise, neutral, and instructive. Errors must explain next steps without leaking sensitive system logic. Operational dashboards must surface metrics such as registration conversion rate, failed login distribution, reset success rate, and anomaly triggers. Compliance logging must satisfy audit requirements for industries with security mandates.
+
+      Ultimately, this epic ensures that identity on ShopEase is resilient against abuse while remaining intuitive for legitimate customers. It establishes trust, preserves platform integrity, and protects downstream business processes like checkout and order management from unauthorized access.
+  
   - slug: search
     summary: "ShopEase: Browse & Search"
-    description: "Product discovery, search relevance, filters, and product detail experience."
+    description: >
+      This epic defines the entire product discovery experience across search queries, category browsing, filtering, sorting, product detail exploration, and zero-result handling. Its primary objective is to ensure that shoppers can efficiently discover, evaluate, and compare products without friction while maintaining performance and data accuracy across large catalogs.
 
+      Search must support relevance-ranked queries driven by indexed product metadata, including titles, descriptions, tags, attributes, and synonyms. Ranking signals should incorporate popularity, availability, and merchandising boosts while preventing manipulation. Faceted filtering must support multi-select options across attributes such as price range, brand, rating, availability, and product-specific properties. Filters must persist during navigation transitions, including returning from product detail pages to search results.
+
+      Sorting options should include relevance, price ascending/descending, newest arrivals, and customer rating. Changing sort orders must re-evaluate the full result set without losing applied filters. Pagination or infinite scroll must remain stable under high load, preserving scroll position and preventing duplicate items. Data caching strategies should minimize perceived latency while ensuring stock and price freshness.
+
+      Product detail pages (PDPs) must display variant-specific information such as size, color, bundle configuration, and region-based shipping eligibility. Variant selection must dynamically update price, stock, images, badges, and estimated delivery times. Low-stock warnings must reflect real inventory thresholds and update if inventory changes during the session.
+
+      Zero-result states must not be dead ends. They must suggest alternative queries, related categories, trending products, or recently viewed items. Error handling for backend outages or slow search responses must degrade gracefully using cached data and explanatory messaging.
+
+      Accessibility requirements include semantic HTML structure, alt text for images, keyboard navigability, and proper ARIA labeling for filter components. Analytics must capture search query performance, filter usage, abandonment rates, and PDP conversion funnels. This epic ensures product discovery remains performant, trustworthy, and conversion-oriented while handling scale, personalization, and operational complexity.
+  
   - slug: cart
     summary: "ShopEase: Cart & Promotions"
-    description: "Cart updates, stock validation, discounts, and promotion eligibility."
+    description: >
+      This epic governs the entire shopping cart lifecycle and promotional enforcement logic. It ensures that cart state remains accurate across devices, sessions, authentication transitions, and pricing updates. The cart acts as the bridge between product discovery and checkout, and therefore must reflect real-time inventory constraints and promotion eligibility without surprising customers.
 
+      Quantity adjustments must trigger inventory validation against live stock data while respecting reservation policies and maximum purchase limits. If requested quantities exceed available inventory, the system must adjust gracefully and explain limits clearly. Stock checks must occur asynchronously but confirm state before totals are finalized.
+
+      Promotion logic must enforce eligibility rules including expiration windows, minimum subtotal thresholds, product/category applicability, user-tier targeting, geographic restrictions, stacking rules, and one-time redemption constraints. The cart must immediately reflect discount applications and show line-item or subtotal breakdowns transparently. Invalid promotions must surface contextual error messaging explaining why they failed without revealing exploitable logic.
+
+      Shipping threshold promotions must dynamically apply or remove as subtotal changes. Progress indicators should show how much additional spend is required to unlock benefits. Guest carts must merge seamlessly upon login, reconciling duplicates and recalculating eligibility under authenticated pricing tiers.
+
+      Cart persistence must allow authenticated users to resume sessions across devices while recalculating inventory and price changes. If items become unavailable, the cart must notify users and offer alternatives. Edge cases such as price changes during session, tax configuration updates, or region shifts must trigger recalculation events.
+
+      Audit logging must capture promotion redemptions, cart merges, quantity adjustments, and inventory conflicts. This epic ensures financial accuracy, pricing transparency, and customer confidence prior to checkout.
+  
   - slug: checkout
     summary: "ShopEase: Checkout & Payments"
-    description: "Address/shipping selection, payment processing, and order confirmation."
+    description: >
+      This epic defines the structured flow that transforms a cart into a completed purchase. It governs address collection, shipping selection, tax calculation, payment authorization, fraud mitigation, confirmation messaging, and error handling. The objective is to ensure transactional accuracy, security, compliance, and clarity.
 
+      Checkout must collect only necessary information depending on guest or authenticated flows. Address validation must integrate postal verification services where available. Shipping methods must dynamically calculate cost and delivery windows based on destination and cart contents.
+
+      Tax calculation must comply with jurisdictional requirements and support locale-based rounding rules. Totals must recalculate at each step and must match the final authorization amount exactly. Any drift between displayed and authorized totals must halt progression until acknowledged and reconciled.
+
+      Payment flows must integrate with gateways supporting tokenization, authorization, capture, refund, and 3DS/SCA flows. Declines must surface human-readable reasons without exposing raw gateway codes. Duplicate charge prevention must rely on idempotency keys. Session continuity must survive temporary redirects to authentication providers.
+
+      Fraud checks may trigger step-up verification, device fingerprint validation, or risk scoring. Clear messaging must explain delays or additional verification requests. Confirmation screens must provide order identifiers, receipts, and next steps.
+
+      All transaction attempts must be logged for reconciliation. Finance reporting must reconcile authorized versus captured amounts. The checkout experience must minimize abandonment while preserving regulatory and security obligations.
+  
   - slug: orders
     summary: "ShopEase: Orders & Returns"
-    description: "Order history, cancellations, refunds, and return flows."
+    description: >
+      This epic governs all post-purchase experiences, including order history visibility, fulfillment tracking, cancellation eligibility, returns processing, refund tracking, and customer communications. It ensures that once payment succeeds, the lifecycle remains transparent and manageable.
 
+      Orders must appear immediately in user history with status timelines reflecting processing, fulfillment, shipment, delivery, and completion. Tracking links must update as carriers provide new events. Cancellation policies must enforce fulfillment cutoffs and automatically restore inventory when appropriate.
+
+      Returns must validate eligibility windows per item, enforce restocking rules, and generate return merchandise authorizations (RMAs). Shipping labels must generate when policy allows and include tracking integration. Refund status updates must propagate through order history and notify customers.
+
+      Audit logs must capture every state transition. Customer service representatives must have clear visibility into return reasons, refund status, and communication history. This epic ensures operational transparency and customer trust beyond checkout.
+  
   - slug: admin
     summary: "ShopEase: Admin Operations"
-    description: "Catalog and order operations in the ShopEase admin panel."
+    description: >
+      This epic empowers internal administrators to manage catalog, pricing, promotions, fulfillment statuses, and user permissions securely and efficiently. Administrative actions directly impact customer-facing experiences and therefore require strict role controls and auditability.
+
+      Catalog management must allow price edits, stock adjustments, SKU updates, and bulk operations. Conflicts from simultaneous edits must trigger warnings. Promotion management must allow scheduling, targeting, stacking configuration, and previewing before activation.
+
+      Order management must support marking shipments, processing refunds, canceling orders, and generating reports. Role-based access control must prevent unauthorized actions and provide granular permissions aligned with job functions.
+
+      Every administrative action must feed into an immutable audit log capturing actor, timestamp, and impacted entities. Reporting dashboards must summarize activity and highlight anomalies such as mass price changes or excessive refunds.
+
+      The admin system must prioritize operational efficiency without sacrificing compliance or traceability. It ensures the storefront, checkout, and order flows remain synchronized with internal operations.
 
 stories:
   # Authentication (auth)
   - epic: auth
     summary: "User can sign up with email verification"
-    description: "New users can register, receive a verification email, and activate their account."
+    description: >
+      This story defines the full lifecycle of a new user registration experience, beginning with account creation and concluding with verified activation. The objective is to ensure that only legitimate email owners activate accounts while maintaining a smooth and confidence-inspiring onboarding journey.
+
+      During registration, the customer provides an email address and password. The system must validate the email format syntactically and perform normalization (e.g., lowercase canonicalization) before checking uniqueness constraints. If an email already exists, the system must not reveal whether it is associated with an account, but instead provide neutral messaging guiding the user to either log in or reset their password.
+
+      Password creation must enforce modern strength requirements using entropy-based validation rather than simplistic character checklists. Weak passwords must trigger real-time feedback explaining how to improve them. The system must check new passwords against a breached-password database to prevent reuse of compromised credentials. All password data must be hashed using a secure, adaptive hashing algorithm before storage.
+
+      Once registration data passes validation, the system generates a cryptographically secure, single-use verification token associated with the account and sends a verification email. The token must include sufficient entropy, expire within a configurable window, and be invalidated immediately after first use. Verification links must not expose internal identifiers or allow token guessing through predictable patterns.
+
+      The verification email must clearly explain why the user is receiving it, what action is required, and how long the link remains valid. If the link expires, the system must allow the user to request a new one without creating duplicate accounts. Repeated requests must be rate-limited to prevent abuse.
+
+      If a user attempts to log in before verifying, the system must block authentication and display a clear explanation with an option to resend the verification email. Edge cases such as inbox delays, spam filtering, or unreachable mail servers must be handled gracefully with alternative instructions.
+
+      Telemetry must record key milestones including registration initiated, verification email sent, verification link clicked, verification successful, and abandonment events. These metrics enable product teams to measure onboarding friction and identify drop-off points.
+
+      All state transitions—including token issuance, expiration, and successful activation—must be audit logged with timestamp and IP metadata. The system must prevent reuse of verification tokens and detect replay attempts.
+
+      This story ensures that the sign-up process builds trust from the first interaction while protecting the platform from fraudulent or automated registrations. It establishes a secure identity foundation without introducing unnecessary friction for legitimate customers.
+
     labels: ["demo", "auth", "journey:new-user"]
 
   - epic: auth
     summary: "User can log in and maintain a secure session"
-    description: "Login works with correct credentials; sessions expire; suspicious activity is handled."
+    description: >
+      This story governs credential-based authentication and secure session lifecycle management for returning users. The objective is to ensure reliable access while protecting accounts against unauthorized use, session hijacking, and credential stuffing.
+
+      When a user submits login credentials, the system must validate the email format, retrieve the corresponding account record securely, and compare the submitted password using constant-time comparison against the stored hash. Failed login attempts must not reveal whether the email or password was incorrect.
+
+      Upon successful authentication, the system must issue a short-lived access token and a secure refresh token. Access tokens should have limited lifetime to reduce exposure risk, while refresh tokens must be securely stored and rotated when used. Tokens must be cryptographically signed and protected against tampering.
+
+      Session fixation protection must ensure that new session identifiers are generated upon successful login. Idle session timeouts must automatically expire inactive sessions after a defined period. A maximum absolute session lifetime must also exist regardless of activity.
+
+      The system must detect suspicious patterns such as rapid repeated login attempts, abnormal geolocation shifts, impossible travel scenarios, or known malicious IP addresses. When risk thresholds are exceeded, adaptive authentication measures such as CAPTCHA or step-up verification may be triggered.
+
+      Concurrent session tracking must allow users to view active sessions including device type, approximate location, and last activity timestamp. Users must be able to terminate sessions individually or globally.
+
+      Error messaging must balance clarity and security. For example, after multiple failed attempts, the system may display a warning about remaining attempts before temporary lockout without disclosing internal thresholds.
+
+      All login attempts—successful and failed—must be logged with metadata for audit and anomaly detection. Operations dashboards must surface patterns indicative of brute-force attacks.
+
+      This story ensures that login remains convenient for legitimate users while establishing strong controls that protect session integrity and reduce account compromise risk.
+
     labels: ["demo", "auth", "journey:returning-user"]
 
   - epic: auth
     summary: "User can reset password via email token"
-    description: "Password reset email contains a time-limited token; token reuse is rejected."
+    description: >
+      This story defines the secure password recovery workflow. The objective is to allow legitimate users to regain access while preventing unauthorized takeover attempts.
+
+      When a user requests a password reset, the system must respond with neutral messaging regardless of whether the email exists in the system. If an account is associated, a cryptographically strong, single-use reset token must be generated and emailed to the user. The token must expire within a short configurable window and must be invalidated immediately upon use.
+
+      The reset link must direct the user to a secure page that validates token authenticity and expiration before allowing password entry. The new password must pass strength validation and breach database checks. Reused previous passwords may optionally be blocked.
+
+      Upon successful password update, all active sessions—including access and refresh tokens—must be invalidated immediately. The user must receive confirmation email notification informing them of the reset event and advising them to contact support if it was not initiated by them.
+
+      Rate limiting must prevent abuse of reset requests. Multiple reset requests should invalidate prior unused tokens to avoid confusion. Replay attempts using expired or consumed tokens must be logged and rejected.
+
+      Audit logs must capture reset request time, token issuance, successful reset completion, and IP metadata. Support teams must have visibility into reset history for fraud investigation.
+
+      This story ensures account recovery is secure, transparent, and resilient against abuse while restoring user access efficiently.
+
     labels: ["demo", "auth"]
 
   - epic: auth
     summary: "Account lockout triggers after repeated failed logins"
-    description: "After N failed attempts, the account is locked for a cooldown period with clear messaging."
+    description: >
+      This story establishes protective lockout mechanisms against brute-force and credential-stuffing attacks while minimizing disruption to legitimate users.
+
+      After a configurable number of consecutive failed login attempts within a defined window, the system must temporarily lock the account. The lockout duration may increase progressively if repeated lockouts occur. Messaging must inform the user that the account is temporarily locked without revealing sensitive thresholds.
+
+      The system may optionally send an email notification alerting the user of suspicious activity. The notification should include guidance on password reset if the attempts were unauthorized.
+
+      During lockout, all login attempts must be rejected regardless of credential correctness. However, password reset functionality must remain available.
+
+      Support staff must have controlled ability to manually lift lockouts with full audit logging. Lockout and unlock events must be logged with timestamps and actor identifiers.
+
+      This story ensures brute-force protection while preserving user trust through transparent communication and safe recovery pathways.
+
     labels: ["demo", "auth", "security"]
 
   - epic: auth
     summary: "User can log out from all devices"
-    description: "Global logout invalidates existing sessions and requires re-authentication on next request."
+    description: >
+      This story defines global session invalidation to protect accounts when compromise is suspected.
+
+      When the user initiates a global logout, the system must invalidate all active access tokens and refresh tokens associated with the account. Token revocation lists must propagate quickly to prevent reuse. Any active sessions must require full reauthentication upon next request.
+
+      In-progress checkout sessions must pause gracefully and require login before continuation. The user must receive confirmation that all sessions have been terminated.
+
+      Audit logs must record the logout event, including timestamp and initiating device metadata. Optional email confirmation may notify the user that all sessions were revoked.
+
+      This functionality ensures users maintain control over their account security across devices and reduces exposure risk in shared-device scenarios.
+
     labels: ["demo", "auth", "sessions"]
+
 
   # Browse & Search (search)
   - epic: search
     summary: "Search supports sorting and filter facets"
-    description: "Users can filter by price/brand and sort by relevance/price."
+    description: >
+      This story defines the interactive search refinement experience that allows customers to efficiently narrow large product catalogs into relevant subsets. The system must support multi-dimensional filtering, real-time result updates, persistent state management, and ranking integrity while maintaining performance under load.
+
+      When a user performs a search query, the system must retrieve results ranked primarily by relevance, incorporating signals such as keyword match density, product popularity, conversion rate, freshness, and merchandising boosts configured by administrators. Ranking logic must remain explainable and auditable so merchandising teams understand why specific items surface.
+
+      Faceted filtering must support multi-select behavior across categories including price ranges, brands, ratings, availability status, shipping eligibility, and product-specific attributes (e.g., size, color, material). Selecting a filter must immediately update the result set and visually reflect which filters are active. Filters must combine using logical AND semantics across categories and OR semantics within the same facet group where appropriate.
+
+      The system must calculate facet counts dynamically based on the currently filtered result set, ensuring counts remain accurate and do not mislead users. Disabled filter options should appear visually distinct when applying them would produce zero results.
+
+      Sorting options must include relevance, price (ascending/descending), rating, and newest arrivals. Changing sort order must not reset applied filters or query context. The interface must clearly indicate the active sort rule and allow users to revert easily.
+
+      Filter and sort state must persist when navigating to a product detail page and returning to search results. Scroll position must also be preserved to prevent disorientation. This requires client-side state retention or intelligent URL parameterization.
+
+      Performance constraints require that result updates feel instantaneous. Backend queries must be optimized with indexing strategies and caching layers. For slow network conditions, skeleton loaders should display while maintaining layout stability. If search backend latency exceeds thresholds, fallback cached results may be displayed with a subtle freshness indicator.
+
+      Accessibility requirements include keyboard navigation for filter controls, proper ARIA labeling, semantic grouping, and screen-reader announcements when result counts update.
+
+      Analytics must track filter usage frequency, sort preference distribution, zero-result triggers, refinement sequences, and search-to-cart conversion rates. This data enables ongoing optimization of discovery performance.
+
+      Error states—such as temporary search service outages—must degrade gracefully, displaying explanatory messaging and fallback navigation paths.
+
+      This story ensures that customers retain control and clarity when exploring large catalogs, reinforcing trust in the system’s ability to present relevant options efficiently.
+
     labels: ["demo", "search"]
 
   - epic: search
     summary: "Product detail page shows variants and stock"
-    description: "PDP displays variants (size/color), price, stock status, and accurate images."
+    description: >
+      This story defines the product detail page (PDP) experience, focusing on dynamic variant management, live inventory reflection, pricing updates, and contextual product information necessary for confident purchasing decisions.
+
+      Each PDP must display comprehensive product information including title, description, specifications, imagery, ratings, availability, and shipping eligibility. If the product includes variants such as size, color, bundle configuration, or regional options, those must be selectable via clearly labeled controls.
+
+      Selecting a variant must dynamically update price, stock availability, SKU identifier, shipping timeline, and imagery gallery. The system must prevent users from adding unavailable variants to the cart and must visually distinguish out-of-stock options.
+
+      Live stock levels must reflect near real-time inventory while respecting reservation policies. If inventory is low, a “low stock” indicator may appear to create urgency while remaining truthful. If stock changes during the session (e.g., due to other purchases), the PDP must refresh availability before cart addition.
+
+      Pricing must reflect any applicable promotions tied to the selected variant. If discounts apply, original price, discounted price, and savings amount must display clearly.
+
+      Imagery must support high-resolution zoom, lazy loading, and fallback placeholders. If an image fails to load, a branded fallback image must appear without breaking layout structure. All images must include descriptive alt text for accessibility compliance.
+
+      Additional contextual elements may include recommended accessories, related products, recently viewed items, and shipping eligibility messages based on user location.
+
+      The add-to-cart action must validate variant selection completeness before enabling submission. Clear messaging must prompt users if required selections are missing.
+
+      Telemetry must capture variant selection frequency, add-to-cart rates per variant, stock-related abandonment, and image load failures.
+
+      This story ensures that the PDP functions as a reliable decision-making hub, presenting accurate, dynamic, and transparent product information without ambiguity.
+
     labels: ["demo", "pdp"]
 
   - epic: search
     summary: "Category browse lists products with pagination"
-    description: "Category pages load consistently and support pagination/infinite scroll."
+    description: >
+      This story governs category and collection browsing experiences, ensuring predictable navigation across large product sets with pagination or infinite scrolling patterns that maintain performance and context continuity.
+
+      Category pages must load products in defined batches, either through numbered pagination or controlled infinite scroll. The chosen pattern must preserve usability and prevent duplicate product rendering.
+
+      Applied filters and sorting selections must persist while browsing within a category. If a user navigates to a PDP and returns, the previous scroll position and filter state must be restored accurately.
+
+      Infinite scroll implementations must preload upcoming pages before the user reaches the end of the current set to avoid visible latency gaps. Pagination must include accessible controls allowing direct navigation to specific pages.
+
+      Skeleton loaders must display during data fetch operations, maintaining layout consistency. If network interruptions occur mid-scroll, the interface must provide retry mechanisms without resetting the entire page state.
+
+      Category metadata including title, description, banner imagery, and merchandising highlights must remain visible and not be obscured by dynamic loading components.
+
+      Analytics must measure scroll depth, page transitions, filter interactions, and category-to-PDP click-through rates.
+
+      The browsing experience must remain stable under high traffic conditions and large catalog sizes.
+
+      This story ensures customers can explore collections fluidly without losing context or encountering performance bottlenecks.
+
     labels: ["demo", "browse"]
 
   - epic: search
     summary: "Search handles zero-results and suggests alternatives"
-    description: "When no products match, users see helpful suggestions and category shortcuts."
+    description: >
+      This story ensures that when a search query produces zero results, the user experience remains helpful and guided rather than abrupt or discouraging.
+
+      If no products match the current query and filters, the interface must clearly state that no results were found while avoiding blame or negative tone. The system must analyze the query to suggest possible alternatives including corrected spelling, synonym substitutions, broader categories, trending products, or removal of restrictive filters.
+
+      If active filters contributed to the empty result set, the UI must indicate which filters are overly restrictive and provide a one-click option to reset them.
+
+      Suggested alternatives must be contextually relevant rather than random. For example, if the query references a specific brand not in stock, suggestions may include similar brands within the same category.
+
+      Analytics must track zero-result queries and suggestion click-through rates to improve search indexing strategies.
+
+      The system must avoid exposing internal inventory logic or sensitive catalog data in zero-result messaging.
+
+      This story ensures that even failed searches contribute constructively to the discovery journey.
+
     labels: ["demo", "search", "ux"]
 
   - epic: search
     summary: "Product images load with fallbacks"
-    description: "Broken image URLs display placeholders; lazy-loading does not block interaction."
+    description: >
+      This story defines resilient product imagery loading behavior to preserve layout stability and visual trust.
+
+      High-resolution images must lazy-load as users scroll while placeholders reserve layout space to prevent content shifts. If an image fails to load due to network issues or corrupted assets, a fallback placeholder image must appear with explanatory alt text.
+
+      Image loading failures must trigger analytics events for operational monitoring. Repeated failures for the same asset must escalate alerts for content teams.
+
+      Accessibility compliance requires descriptive alt attributes for all product imagery. Captions or context indicators must accompany complex images when needed.
+
+      Image performance optimization techniques such as compression, CDN distribution, and responsive sizing must ensure fast loading across device types.
+
+      This story ensures visual consistency and performance reliability across the product discovery journey.
+
     labels: ["demo", "pdp", "ux"]
+
 
   # Cart & Promotions (cart)
   - epic: cart
     summary: "Cart quantity updates validate stock"
-    description: "Quantity changes succeed when stock is available and fail with clear messaging otherwise."
+    description: >
+      This story governs quantity modification behavior inside the shopping cart, ensuring that every adjustment reflects real-time inventory constraints, business rules, and reservation policies. The goal is to prevent overselling while maintaining a fast, responsive customer experience that does not expose backend complexity.
+
+      Whenever a shopper increases or decreases the quantity of a line item, the cart must trigger an inventory validation check against the most current available stock for the selected SKU and variant. The validation must consider existing reservations (e.g., other users’ pending checkouts), safety buffers, maximum purchase limits, and any channel-specific inventory allocations.
+
+      If the requested quantity exceeds available stock, the system must automatically adjust the quantity downward to the maximum allowed and display clear, non-alarming messaging explaining the change. Messaging must avoid technical jargon and instead focus on helping the shopper understand availability constraints. The system must never silently fail or allow a cart state that cannot be fulfilled.
+
+      Inventory checks must occur asynchronously but complete before totals are finalized. The UI must feel immediate even though backend validation is happening. Optimistic updates may temporarily adjust quantities visually, but confirmation must reconcile against backend validation responses.
+
+      If inventory becomes unavailable entirely (e.g., another user completes purchase before validation finishes), the cart must remove the item gracefully and notify the user. Suggested alternatives or waitlist enrollment options may appear if applicable.
+
+      The cart must recalculate subtotal, tax estimates, shipping estimates, and applied promotions immediately after quantity adjustments. Any promotion dependent on quantity thresholds must dynamically update.
+
+      Rate limiting must prevent abuse from automated scripts attempting to reserve excessive stock through repeated updates. Audit logs must record quantity changes including timestamp, SKU, prior quantity, new quantity, and user/session identifier.
+
+      Edge cases include - price updates during session, inventory restock events, region changes affecting availability, and concurrency conflicts when multiple sessions modify the same cart.
+
+      Telemetry must track frequency of quantity updates, inventory rejections, out-of-stock removals, and their downstream impact on checkout conversion.
+
+      This story ensures the cart always reflects an accurate, fulfillable state while preserving speed and user confidence.
+
     labels: ["demo", "cart"]
 
   - epic: cart
     summary: "Promo code application follows eligibility rules"
-    description: "Promo codes apply only when eligible; invalid/expired codes show correct errors."
+    description: >
+      This story defines how promotional codes are validated, applied, displayed, and audited within the cart experience. The system must enforce strict eligibility rules while maintaining transparency and fairness for shoppers.
+
+      When a shopper enters a promotional code, the system must validate the code against multiple criteria including expiration date, activation window, usage limits, user eligibility tier, geographic restrictions, minimum spend requirements, and product/category applicability. Validation must occur in real time and return a definitive result.
+
+      If the code is valid, the cart must immediately reflect the discount, clearly labeling the promotion name, the discount amount, and whether it applies at line-item or subtotal level. The original price must remain visible for clarity. The discount must persist through checkout and into order confirmation without recalculation drift.
+
+      If the code is invalid, the system must provide specific but non-exploitable messaging. For example, if the code is expired, messaging should state that it has expired rather than exposing internal campaign logic. If the code does not apply to selected products, the system should suggest eligible alternatives when possible.
+
+      The promotion engine must prevent stacking of incompatible promotions and must determine precedence when multiple codes are entered. If a new code supersedes an old one, the system must clearly communicate which discount remains active.
+
+      Usage limits per user or globally must be enforced atomically to prevent race conditions. Concurrent redemption attempts must resolve safely without oversubscription.
+
+      Removing items from the cart that affect eligibility must trigger automatic recalculation and potential removal of the promotion. Messaging must explain why the discount disappeared.
+
+      Audit logging must capture every redemption attempt (successful or failed), including timestamp, code, user/session identifier, and validation outcome. Marketing analytics must attribute redemptions to campaigns accurately.
+
+      Edge cases include partial refunds affecting promotional value, cart merges during login, and price changes mid-session.
+
+      This story ensures promotional integrity while preserving a frictionless customer experience and financial accuracy.
+
     labels: ["demo", "promotions"]
 
   - epic: cart
     summary: "Shipping threshold promotion is applied"
-    description: "Free shipping threshold is applied based on subtotal and updated when cart changes."
+    description: >
+      This story governs automatic free-shipping threshold promotions based on subtotal value. The system must dynamically apply or remove the promotion as cart contents change, ensuring complete transparency and predictable behavior.
+
+      When the cart subtotal (excluding tax and shipping) meets or exceeds the configured threshold, the system must automatically apply the free-shipping benefit. The shipping line item must update to reflect zero cost while still displaying the original shipping rate for transparency.
+
+      A visual progress indicator must display how close the shopper is to qualifying when below threshold. The progress indicator must update in real time as quantities or items change.
+
+      If the shopper removes items and drops below threshold, the system must automatically remove the free-shipping benefit and clearly explain the change. Messaging must emphasize eligibility conditions rather than implying error.
+
+      The threshold calculation must consider region-specific rules, currency differences, and rounding policies. Promotions must not conflict with other shipping discounts unless explicitly allowed by configuration.
+
+      Audit logs must capture automatic application and removal events. Analytics must track how often shoppers increase cart value to meet the threshold.
+
+      This story ensures incentive-based promotions behave predictably and encourage incremental spend without confusion.
+
     labels: ["demo", "promotions"]
 
   - epic: cart
     summary: "Cart persists across sessions for returning users"
-    description: "Signed-in users see their cart restored after logout/login within retention policy."
+    description: >
+      This story ensures that authenticated users can resume their cart state across sessions and devices within a defined retention window. Cart persistence must be reliable, conflict-aware, and transparent when recalculations occur.
+
+      When a logged-in user returns after leaving the platform, the system must retrieve the most recent cart snapshot associated with their account. The snapshot must include SKU identifiers, variant selections, quantities, applied promotions, and contextual metadata.
+
+      Upon restoration, the system must revalidate inventory, pricing, tax rules, and promotion eligibility. Any discrepancies—such as price increases or out-of-stock items—must be communicated clearly in a summary view.
+
+      Duplicate items arising from multi-device sessions must be consolidated according to business rules. Removed items due to unavailability must remain visible temporarily with explanation and suggested alternatives.
+
+      Promotions that expired during inactivity must be removed with messaging indicating expiration.
+
+      Cart persistence must respect privacy constraints and configurable retention periods.
+
+      Audit logs must record cart restoration events and reconciliation outcomes.
+
+      This story ensures continuity while maintaining accuracy and preventing stale or invalid states.
+
     labels: ["demo", "cart", "journey:returning-user"]
 
   - epic: cart
     summary: "Cart merges guest items on login"
-    description: "When a guest logs in, items merge with the user cart without duplication."
+    description: >
+      This story defines the merge logic when a guest user with an active cart logs into an existing account that already has saved cart items. The system must reconcile both carts deterministically and transparently.
+
+      When login occurs, the system must retrieve both the anonymous cart and the stored authenticated cart. Duplicate SKUs must merge quantities up to maximum allowed limits. Conflicts such as price differences or variant mismatches must trigger recalculation and explanatory messaging.
+
+      Promotion eligibility must be re-evaluated after merge. If both carts had separate promotions, precedence rules must determine the final applied discount. The system must communicate which promotion remains active.
+
+      Inventory validation must occur after merge to prevent overselling. Items exceeding stock must adjust downward with explanation.
+
+      A merge summary must present added items, quantity adjustments, removed items, and promotional changes before proceeding.
+
+      Audit logging must capture merge actions including pre-merge and post-merge states.
+
+      This story ensures seamless transition from guest browsing to authenticated purchasing without confusion or hidden recalculations.
+
     labels: ["demo", "cart", "journey:guest"]
 
   # Checkout & Payments (checkout)
   - epic: checkout
     summary: "Guest checkout is supported"
-    description: "Users can complete checkout without creating an account; email is required."
+    description: >
+      This story defines the complete guest checkout experience, allowing customers to complete purchases without creating an account while preserving security, compliance, and order traceability. The objective is to reduce friction for first-time buyers while ensuring the platform maintains accurate transactional records.
+
+      Guest checkout must require only essential information - email address, shipping address, billing address (if different), and payment details. The system must validate email format and encourage accuracy since order confirmation and receipts depend on it. However, it must not force account creation at any step.
+
+      Address validation must integrate optional postal verification services where available. If validation fails, the user must be shown suggested corrections rather than being blocked without explanation. Internationalization must support multiple country formats, postal code rules, and region-specific requirements.
+
+      Shipping options must calculate dynamically based on cart contents, shipping destination, fulfillment location, weight, dimensional constraints, and active shipping promotions. Delivery estimates must display clearly and update if address details change.
+
+      Tax calculation must respect jurisdiction-specific rules, including destination-based tax logic and rounding requirements. The subtotal, tax, shipping, and discounts must recalculate instantly whenever relevant inputs change.
+
+      Payment processing must tokenize card data through a compliant gateway, ensuring that raw payment details are never stored. Anti-fraud checks such as address verification (AVS), CVV validation, and device fingerprinting may occur silently unless additional verification is required.
+
+      The system must handle payment declines gracefully with specific but user-friendly messaging (e.g., expired card, insufficient funds, incorrect CVV). The cart must remain intact after decline to allow retry without data loss.
+
+      Confirmation screens must provide a unique order identifier, order summary, and receipt delivery confirmation. Guests must be informed that they can optionally create an account later to track their order more easily.
+
+      Rate limiting and bot detection mechanisms must prevent automated abuse of guest checkout.
+
+      Audit logs must record checkout start, payment attempt, authorization result, and confirmation issuance.
+
+      This story ensures that guest checkout reduces friction while maintaining enterprise-grade transactional reliability.
+
     labels: ["demo", "checkout", "journey:guest"]
 
   - epic: checkout
     summary: "Saved addresses can be selected at checkout"
-    description: "Returning users can select, add, and edit addresses during checkout."
+    description: >
+      This story governs address management and selection for authenticated users during checkout. The objective is to streamline repeat purchases while maintaining shipping accuracy and compliance.
+
+      Returning users must see a list of saved addresses, including default shipping and billing entries. The system must clearly label address types and allow inline editing without forcing navigation away from checkout.
+
+      Selecting an address must immediately trigger recalculation of shipping methods, delivery timelines, tax estimates, and any region-dependent promotions. These recalculations must be visibly acknowledged so users understand that totals may change.
+
+      Users must be able to add new addresses mid-checkout. Newly added addresses may optionally be saved to their profile with explicit confirmation messaging.
+
+      Address validation must ensure formatting correctness and reduce failed deliveries. However, validation must not block legitimate edge-case addresses without offering override capability.
+
+      The system must maintain consistency between displayed address and the one transmitted to fulfillment systems.
+
+      Audit logs must capture address modifications during checkout, including old vs. new values and timestamp.
+
+      This story ensures checkout efficiency for returning customers without sacrificing logistical accuracy.
+
     labels: ["demo", "checkout"]
 
   - epic: checkout
     summary: "Card payments succeed/fail with clear error states"
-    description: "Payment failures produce actionable messaging and do not create duplicate orders."
+    description: >
+      This story defines payment authorization outcomes and user-facing error clarity. The system must provide deterministic success/failure states while preventing duplicate charges or ambiguous results.
+
+      Upon submission of payment details, the system must create an idempotent authorization request to the payment gateway. If authorization succeeds, the user must receive immediate confirmation and the order must transition to processing state.
+
+      If authorization fails, the system must display a clear explanation such as insufficient funds, expired card, incorrect CVV, or issuer decline. Messaging must avoid exposing raw gateway error codes while still guiding corrective action.
+
+      Duplicate submission prevention must rely on idempotency keys and backend safeguards. Refreshing the page or double-clicking submit must not create multiple charges.
+
+      Timeouts must be handled carefully. If gateway response is delayed, the system must show a processing state rather than error prematurely. If final status cannot be determined immediately, the order must enter a pending state with follow-up confirmation once resolved.
+
+      Payment failures must preserve cart contents and previously entered checkout data where safe.
+
+      Audit logs must capture request identifiers, gateway responses, and final outcomes for reconciliation.
+
+      This story ensures financial integrity and user clarity during the most sensitive step of purchase.
+
     labels: ["demo", "payments"]
 
   - epic: checkout
     summary: "Checkout validates tax and totals before payment"
-    description: "Order totals (subtotal, tax, shipping, discounts) are consistent across steps."
+    description: >
+      This story ensures monetary accuracy and trust by validating all totals prior to payment authorization. The objective is to prevent discrepancies between displayed and charged amounts.
+
+      At each step of checkout, the system must recalculate subtotal, discounts, tax, and shipping using authoritative pricing services. Any drift between displayed total and recalculated total must be resolved before allowing payment submission.
+
+      Locale-specific rounding rules must be respected. Currency conversion (if applicable) must use current exchange rates and display clearly.
+
+      If totals change due to inventory updates, promotion expiration, or address changes, the system must display a clear explanation and require user acknowledgment before proceeding.
+
+      The final payment authorization amount must exactly match the confirmed total shown on screen.
+
+      Audit logs must record pre-payment total snapshot and authorized amount for finance reconciliation.
+
+      This story ensures pricing transparency and compliance integrity.
+
     labels: ["demo", "checkout", "risk:high"]
 
   - epic: checkout
     summary: "3DS / SCA flow is handled for card payments"
-    description: "If authentication is required, the user is redirected and returns with correct status."
+    description: >
+      This story governs Strong Customer Authentication (SCA) and 3D Secure (3DS) flows required by certain issuers or regulatory environments. The objective is to integrate additional authentication without breaking checkout continuity.
+
+      If the issuing bank requires step-up authentication, the user must be redirected securely to the authentication provider. The checkout session must remain active during redirection.
+
+      The system must handle successful authentication, failed authentication, user cancellation, and timeout scenarios distinctly. Upon successful authentication, the user must be redirected back to confirmation with preserved cart and order context.
+
+      Failed authentication must show clear messaging and allow retry or alternative payment methods.
+
+      Session integrity must prevent replay attacks or tampering during redirection.
+
+      Audit logs must record authentication challenge initiation, outcome, and associated transaction identifiers.
+
+      This story ensures regulatory compliance while preserving user trust and minimizing abandonment.
+
     labels: ["demo", "payments", "risk:high"]
 
   # Orders & Returns (orders)
   - epic: orders
     summary: "Order appears in order history after purchase"
-    description: "Successful checkout creates an order record visible in history with correct status."
+    description: >
+      This story defines the creation and visibility of an order record immediately after a successful purchase. Once payment authorization succeeds and the order is committed to the system of record, a complete transactional snapshot must be stored. That snapshot includes all line items, selected variants, quantities, unit pricing at the time of purchase, applied discounts, tax calculations, shipping cost, shipping method, billing address, shipping address, and a tokenized reference to the payment method. This snapshot must remain immutable so that historical accuracy is preserved even if product prices or catalog data change later.
+
+      The order must appear instantly in the authenticated user’s order history dashboard. The history view must show summary-level information including order identifier, date, total amount, and current status. Expanding the order must reveal detailed line items and fulfillment progress. For guest purchases, order visibility must be accessible through a secure lookup mechanism using information delivered via confirmation email. Access to guest order lookup must avoid exposing sensitive data and must include rate limiting to prevent enumeration attempts.
+
+      Order status progression must reflect operational reality. As the order moves through fulfillment, its status must update in near real time. Status values such as processing, packed, shipped, delivered, or completed must correspond directly to fulfillment system events. Each transition must be timestamped and appended to a visible order timeline so customers understand what has happened and when.
+
+      If tracking information becomes available, the order view must include carrier name and tracking identifier. Tracking links must direct customers to carrier websites and must update as new tracking events are received. In cases of partial shipment where items are fulfilled separately, the interface must clearly show multiple shipment groupings under the same order.
+
+      Notification workflows must send confirmation email upon order creation and additional notifications for shipment and delivery milestones. These communications must include accurate order summaries and contact pathways for support.
+
+      The system must reconcile order state with downstream systems such as warehouse management, payment capture services, and refund systems. Any asynchronous updates must propagate to the order history interface without inconsistency.
+
+      Audit logs must capture order creation timestamp, payment confirmation event, status transitions, and notification dispatch actions. These logs support operational reporting and dispute resolution.
+
+      This story ensures customers have continuous visibility into their purchase journey and reinforces trust immediately after checkout completion.
+
     labels: ["demo", "orders"]
 
   - epic: orders
     summary: "User can initiate a return within policy window"
-    description: "Return requests are allowed within the return window and require a reason selection."
+    description: >
+      This story defines the return initiation workflow and enforces configurable return eligibility policies. From the order history interface, eligible line items must display a return initiation option if they fall within the defined return window. Eligibility must consider delivery confirmation timestamp, product category exclusions, regulatory constraints, regional rules, and whether the item has already been returned or partially refunded.
+
+      When a user selects an item for return, the system must prompt for a reason selection and optionally allow additional comments. Return reasons must be categorized for reporting purposes but must not restrict legitimate returns unless policy explicitly requires it. Once submitted, the return request must be validated against policy rules in real time.
+
+      If the return is eligible, the system must generate a return request record associated with the original order. The user must receive confirmation that the request has been accepted and receive next-step instructions such as packaging guidance, drop-off instructions, or pickup scheduling where supported.
+
+      If the return request is not eligible, the system must clearly explain why. Reasons may include expired return window, item marked as final sale, or item already refunded. Messaging must be clear and respectful without exposing internal policy logic unnecessarily.
+
+      The return initiation must trigger operational workflows so warehouse or customer support teams can process the request. The return must appear in the order timeline with its own status progression such as requested, approved, in transit, received, and completed.
+
+      Audit logs must capture return initiation timestamp, selected reason, validation outcome, and user identifier. Analytics must track return rates, reasons distribution, and time-to-initiation metrics.
+
+      This story ensures returns are controlled, traceable, and aligned with business policy while remaining transparent and fair to customers.
+
     labels: ["demo", "returns"]
 
   - epic: orders
     summary: "Refund status is visible and updated"
-    description: "Refund processing updates order status and provides timeline visibility."
+    description: >
+      This story governs refund processing visibility after a return or cancellation event. Once a refund is initiated by the system or an administrator, the order timeline must reflect that refund processing has begun. The refund record must include amount, payment method reference, and associated line items.
+
+      Refund processing may occur in multiple stages such as initiated, submitted to gateway, processed by gateway, and completed. Each stage must be timestamped and visible in the order history. If a refund is partial, the system must clearly show which items or amounts are included.
+
+      The system must communicate realistic processing timelines, especially when financial institutions may delay final posting to the customer’s account. Messaging must clarify that completion in the platform does not always equal immediate bank settlement.
+
+      If a refund fails due to gateway or banking issues, the order view must update accordingly and support teams must be alerted for resolution. Customers must receive notification when refund status changes to completed.
+
+      Refund records must reconcile with finance systems to ensure reporting accuracy. The refunded amount must match original payment method records and must not exceed captured amounts.
+
+      Audit logs must record refund initiation actor, timestamp, amount, gateway response, and final state. Analytics must measure average refund processing duration and frequency of partial versus full refunds.
+
+      This story ensures customers remain informed about their money and reduces support inquiries related to refund uncertainty.
+
     labels: ["demo", "refunds"]
 
   - epic: orders
     summary: "Order cancellation is possible before shipment"
-    description: "Users can cancel unshipped orders; cancellation updates status and triggers notification."
+    description: >
+      This story defines cancellation eligibility and processing prior to shipment. If an order has not yet entered fulfillment or has not been handed to a carrier, the customer must be able to request cancellation directly from the order history interface.
+
+      Cancellation eligibility must be determined in real time by checking fulfillment status. If fulfillment has begun or shipment is confirmed, cancellation must be blocked and the user directed toward return options instead.
+
+      When cancellation is initiated and eligible, the system must immediately update order status to canceled and release any reserved inventory back to available stock. If payment capture has already occurred, a refund must be automatically initiated in accordance with refund processing workflows.
+
+      Confirmation messaging must clearly state that the order has been canceled and whether a refund has been triggered. The order timeline must reflect cancellation as a terminal state while preserving original order details for historical reference.
+
+      The system must prevent duplicate cancellation attempts and must ensure idempotency so repeated clicks do not create inconsistent states.
+
+      Audit logs must capture cancellation timestamp, initiating actor, pre-cancellation status, and refund linkage if applicable. Operational dashboards must track cancellation rate and reasons.
+
+      This story ensures that customers retain flexibility before fulfillment while protecting operational integrity.
+
     labels: ["demo", "orders"]
 
   - epic: orders
     summary: "Return shipping label is generated when eligible"
-    description: "Eligible returns provide a downloadable label; ineligible returns show policy messaging."
+    description: >
+      This story governs automated generation of return shipping labels when return requests qualify under policy. Once a return request is approved, the system must generate a shipping label that includes correct sender and recipient information, carrier selection, and tracking identifier.
+
+      The label must be downloadable from the order portal and accessible until the return is completed or expired. Tracking information must update the return timeline as carrier events are received.
+
+      If policy requires customer-paid return shipping, the label generation logic must reflect appropriate billing rules. If free returns apply, the label must be prepaid.
+
+      Ineligible return requests must not generate labels. Instead, the system must clearly explain why the label cannot be created, such as expired return window or excluded product category.
+
+      Support agents must have the ability to regenerate labels when necessary, with all actions logged.
+
+      Audit logs must capture label generation timestamp, associated return identifier, carrier information, and tracking number. Analytics must measure label usage rate and return transit durations.
+
+      This story ensures that return logistics are automated, traceable, and aligned with return policy enforcement.
+      
     labels: ["demo", "returns"]
 
-  # Admin Ops (admin)
+    # Admin Ops (admin)
   - epic: admin
     summary: "Admin can update product price and stock"
-    description: "Catalog updates are audited and reflect on PDP/search promptly."
+    description: >
+      This story governs administrative control over catalog pricing and inventory levels. Authorized administrators must be able to update product prices, variant pricing, and available stock quantities through a secure back-office interface. Changes must apply to individual SKUs or in bulk depending on permission level and operational need.
+
+      When a price update occurs, the system must record both the previous value and the new value along with the timestamp and the identity of the administrator performing the change. If multiple administrators attempt to modify the same product concurrently, the system must detect conflicts and either prevent overwriting or require confirmation before applying changes.
+
+      Stock updates must reflect immediately across customer-facing surfaces including search results, product detail pages, and cart validation checks. Inventory changes must propagate to downstream fulfillment systems to ensure consistency.
+
+      The interface must provide safeguards against extreme or accidental inputs such as negative stock values or unrealistic pricing changes. Optional confirmation prompts may appear when price changes exceed configurable percentage thresholds.
+
+      Bulk operations must support structured import formats and preview screens before final application. Administrators must be able to see how many products will be affected before committing.
+
+      Every update must be written to an immutable audit log including affected SKU identifiers, old value, new value, actor, timestamp, and optional reason field. These logs must be searchable for compliance review.
+
+      Notifications may be triggered for large pricing changes or inventory adjustments to alert merchandising or operations teams.
+
+      This story ensures that catalog updates are controlled, traceable, and immediately reflected in the storefront without creating inconsistencies.
+
     labels: ["demo", "admin", "catalog"]
 
   - epic: admin
     summary: "Admin can mark an order as shipped"
-    description: "Shipment status updates order tracking and triggers customer notification."
+    description: >
+      This story defines administrative shipment confirmation workflows. Once a fulfillment event occurs and a package is handed to a carrier, authorized administrators must be able to mark the order or specific shipment group as shipped within the system.
+
+      The shipment update must include required metadata such as carrier name, tracking identifier, shipment date, and optionally estimated delivery date. The system must validate that all mandatory fields are present before allowing the status transition.
+
+      When marked as shipped, the order status must update immediately in the customer-facing portal. Shipment confirmation notifications must be dispatched automatically to the customer including tracking details.
+
+      The system must prevent shipment confirmation if the order is already canceled or refunded. Duplicate shipment updates must be blocked through idempotent controls.
+
+      If partial shipments occur, administrators must be able to ship subsets of items while leaving remaining items in processing state. The order timeline must clearly show which items were shipped and when.
+
+      Audit logs must capture shipment marking event including actor, timestamp, tracking number, and pre-shipment status. Operational dashboards must reflect shipment counts and fulfillment velocity metrics.
+
+      This story ensures shipment confirmation is accurate, timely, and transparent for both customers and internal reporting.
+
     labels: ["demo", "admin", "orders"]
 
   - epic: admin
     summary: "Admin roles restrict access to sensitive actions"
-    description: "Only authorized roles can refund/cancel orders; unauthorized attempts are blocked."
+    description: >
+      This story defines role-based access control for administrative operations. The system must support multiple admin roles with granular permissions governing access to pricing changes, refunds, cancellations, promotion creation, user management, and audit logs.
+
+      Each administrator must be assigned one or more roles that determine allowed actions. The system must enforce authorization checks at both interface and API levels to prevent bypass through direct requests.
+
+      Sensitive actions such as issuing refunds, canceling orders, editing prices, or modifying promotions must require appropriate role privileges. Unauthorized attempts must be blocked and logged.
+
+      Role changes must take effect immediately and must not require system restarts. Administrators with permission management rights must be able to assign, update, or revoke roles for other administrators.
+
+      Permission boundaries must be clear to prevent accidental misuse. The interface may hide controls that are not authorized for a given role.
+
+      Every sensitive action must be logged with actor, timestamp, affected entity, and action type. Compliance teams must have read-only access to audit trails regardless of operational role assignments.
+
+      This story ensures internal controls prevent unauthorized modifications while maintaining operational flexibility.
+
     labels: ["demo", "admin", "permissions"]
 
   - epic: admin
     summary: "Admin can create and schedule a promotion"
-    description: "Promotions can be activated/deactivated and scheduled without breaking checkout totals."
+    description: >
+      This story governs the creation, configuration, and scheduling of promotional campaigns. Authorized administrators must be able to define promotion rules including discount type, percentage or fixed value, applicable products or categories, minimum spend thresholds, geographic targeting, and stacking behavior.
+
+      Administrators must specify activation and expiration windows with timezone awareness. Scheduled promotions must activate automatically at the configured start time and deactivate at the configured end time without manual intervention.
+
+      The system must validate promotion configurations to prevent logical conflicts such as overlapping incompatible promotions or invalid discount values. Preview functionality must allow administrators to simulate how the promotion affects selected products before publishing.
+
+      When active, promotions must integrate seamlessly with cart and checkout calculations. Removing or editing an active promotion must propagate safely and consistently without causing pricing discrepancies in active carts.
+
+      Promotion edits must record prior configuration values for audit purposes. Bulk targeting operations must provide summary counts before confirmation.
+
+      Audit logs must capture creation, modification, activation, deactivation, and deletion events including actor and timestamp.
+
+      This story ensures marketing teams can execute campaigns confidently without destabilizing checkout totals or financial reporting.
+
     labels: ["demo", "admin", "promotions"]
 
   - epic: admin
     summary: "Admin audit log captures catalog and order actions"
-    description: "Key admin actions are recorded with actor and timestamp for compliance."
-    labels: ["demo", "admin", "audit"]
+    description: >
+      This story defines the centralized audit logging system for administrative actions affecting catalog, pricing, orders, promotions, refunds, and permissions. Every state-changing administrative action must generate an immutable log entry.
 
+      Each audit entry must include actor identity, timestamp, action type, affected entity identifiers, prior values, new values, and optional contextual metadata. Logs must be append-only and protected against tampering.
+
+      The audit interface must support filtering by date range, action type, administrator, entity identifier, and severity classification. Search functionality must allow rapid retrieval of relevant records during investigations.
+
+      High-risk actions such as mass price changes, bulk refunds, or permission escalations may trigger alert notifications to compliance teams.
+
+      The logging system must be performant and must not degrade operational workflows even under high activity volume. Retention policies must comply with regulatory requirements and business needs.
+
+      Read-only access to audit logs must be granted to designated oversight roles. Modification or deletion of audit records must not be possible through standard administrative controls.
+
+      This story ensures operational transparency, compliance readiness, and the ability to trace how administrative actions impact customer-facing outcomes.
+      
+    labels: ["demo", "admin", "audit"]
