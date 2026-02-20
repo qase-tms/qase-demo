@@ -42,9 +42,6 @@ defects.update → api/defects.update.md
 defects.delete → api/defects.delete.md
 defects.resolve → api/defects.resolve.md
 
-## Shared Models
-shared.models → api/_shared-models.md
-
 ## How to Use
 
 1. Find the endpoint key.
