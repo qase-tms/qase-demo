@@ -1,16 +1,13 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change:      1.0.0 → 1.1.0 (MINOR — new section added; 4 deferred decisions resolved)
+Version change:      1.1.0 → 1.1.1 (PATCH — Python environment clarification added)
 Modified principles: None
-Added sections:      API Reference Guidance (new §, between Technical Architecture and Workspace Narrative)
-Removed sections:    None (4 TODO blocks replaced with concrete decisions)
+Added sections:      "Python Environment" subsection under Technical Architecture & Security
+Removed sections:    None
 
 Resolved TODOs:
-  ✅ WORKSPACE_SCOPE  → Option A: Single project ("ShopEase Web App")
-  ✅ FAILING_FEATURE  → Checkout (intentionally lower pass rate)
-  ✅ RUN_TYPES        → Option B: Mixed — Regression + Feature + Smoke runs
-  ✅ REPO_PHILOSOPHY  → Option B: Step-based sequential scripts
+  ✅ PYTHON_ENV → .venv/ is the authoritative interpreter; bare python/python3 prohibited
 
 Templates reviewed:
   ✅ .specify/templates/plan-template.md    — No changes required
@@ -20,6 +17,15 @@ Templates reviewed:
   ✅ .specify/templates/checklist-template.md   — No changes required
 
 Deferred TODOs: None remaining
+
+---
+Prior report (1.0.0 → 1.1.0):
+  Version change:      1.0.0 → 1.1.0 (MINOR — new section added; 4 deferred decisions resolved)
+  Added sections:      API Reference Guidance
+  ✅ WORKSPACE_SCOPE  → Option A: Single project ("ShopEase Web App")
+  ✅ FAILING_FEATURE  → Checkout (intentionally lower pass rate)
+  ✅ RUN_TYPES        → Option B: Mixed — Regression + Feature + Smoke runs
+  ✅ REPO_PHILOSOPHY  → Option B: Step-based sequential scripts
 -->
 
 # Qase Living Workspace Automation Constitution
@@ -132,10 +138,28 @@ AI-generated test cases in CI are prohibited. Human-authored or human-approved c
 
 | Concern          | Choice                                  |
 |------------------|-----------------------------------------|
-| Language         | Python                                  |
-| Orchestrator     | GitHub Actions      Qase                    |
-| Primary API      |  API v1 (+ v2 where required)       |
+| Language         | Python 3.14                             |
+| Orchestrator     | GitHub Actions / Qase                   |
+| Primary API      | Qase API v1 (+ v2 where required)       |
 | Requirements API | Jira Cloud REST API v3                  |
+
+### Python Environment
+
+All scripts MUST be executed using the project-local virtual environment at `.venv/`.
+This environment is already created and contains all required dependencies.
+
+**Correct invocation:**
+```
+.venv/bin/python workspace_init.py
+.venv/bin/python scripts/jira_requirements.py create
+.venv/bin/python scripts/suite_generator.py
+```
+
+**Never** run `pip install`, `python`, or `python3` directly against the system interpreter.
+**Never** attempt to install dependencies — they are already present in `.venv/`.
+
+Any agent or automation step that calls a Python script in this repository MUST prefix
+the interpreter path with `.venv/bin/python` (absolute or relative to the repo root).
 
 ### Rate Limiting (Hard Limits)
 
@@ -368,4 +392,4 @@ The `Constitution Check` section in every `plan.md` file exists for this purpose
 
 ---
 
-**Version**: 1.1.0 | **Ratified**: 2026-02-18 | **Last Amended**: 2026-02-18
+**Version**: 1.1.1 | **Ratified**: 2026-02-18 | **Last Amended**: 2026-02-24

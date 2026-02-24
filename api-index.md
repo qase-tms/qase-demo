@@ -42,6 +42,10 @@ defects.update → api/defects.update.md
 defects.delete → api/defects.delete.md
 defects.resolve → api/defects.resolve.md
 
+## Suites
+suites.list → api/get-suites.md
+suites.create → api/create-suite.md
+
 ## How to Use
 
 1. Find the endpoint key.
