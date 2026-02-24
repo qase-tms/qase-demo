@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-02-19
 
 ## Active Technologies
+- Python 3.11 (matches the full workspace automation suite). + `csv` (stdlib), `urllib.request` (stdlib), `PyYAML` (≥5.4), `pathlib` (stdlib); shared helpers from `scripts/qase_seed_utils.py` (`get_qase_token`, `load_state`, `save_state`). (003-suite-generator)
+- `state/workspace_state.json` — read for `project_code`, merged with `suite_ids` on write. Atomic write via temp-file rename (provided by `save_state`). (003-suite-generator)
 
 - Python 3.11 (matches the rest of the workspace automation suite). + `requests`, `PyYAML`, shared helpers (`scripts/qase_seed_utils.py`). (002-jira-requirements)
 
@@ -13,15 +15,39 @@ src/
 tests/
 ```
 
+## Python Environment
+
+All scripts use the project-local virtual environment at `.venv/`. Dependencies are already installed.
+
+**Always invoke Python as:**
+```
+.venv/bin/python workspace_init.py
+.venv/bin/python scripts/jira_requirements.py create
+.venv/bin/python scripts/suite_generator.py
+.venv/bin/python scripts/case_generator.py
+```
+
+Never use bare `python`, `python3`, or run `pip install`. Never use a system interpreter.
+
 ## Commands
 
-cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] pytest [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] ruff check .
+```
+# Run scripts in canonical order from repo root
+.venv/bin/python workspace_init.py
+.venv/bin/python scripts/jira_requirements.py create
+.venv/bin/python scripts/suite_generator.py
+.venv/bin/python scripts/case_generator.py
+.venv/bin/python scripts/run_simulator.py --backfill
+.venv/bin/python scripts/defect_generator.py
+.venv/bin/python scripts/maintenance.py
+```
 
 ## Code Style
 
 Python 3.11 (matches the rest of the workspace automation suite).: Follow standard conventions
 
 ## Recent Changes
+- 003-suite-generator: Added Python 3.11 (matches the full workspace automation suite). + `csv` (stdlib), `urllib.request` (stdlib), `PyYAML` (≥5.4), `pathlib` (stdlib); shared helpers from `scripts/qase_seed_utils.py` (`get_qase_token`, `load_state`, `save_state`).
 
 - 002-jira-requirements: Added Python 3.11 (matches the rest of the workspace automation suite). + `requests`, `PyYAML`, shared helpers (`scripts/qase_seed_utils.py`).
 
