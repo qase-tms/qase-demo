@@ -257,12 +257,12 @@ jobs:
           staged_any=false
           for f in state/workspace_state.json state/run_simulator_state.json state/maintenance_state.json state/jira_state.json; do
             if [[ -f "$f" ]]; then
-              git add "$f"
+              git add -f "$f"
               staged_any=true
             fi
           done
           if [[ -d "state/history" ]]; then
-            git add state/history
+            git add -f state/history
             staged_any=true
           fi
           if [[ "$staged_any" != "true" ]]; then
