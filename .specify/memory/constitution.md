@@ -1,13 +1,13 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version change:      1.1.0 → 1.1.1 (PATCH — Python environment clarification added)
-Modified principles: None
-Added sections:      "Python Environment" subsection under Technical Architecture & Security
+Version change:      1.1.1 → 1.2.0 (MINOR — cadence policy aligned to weekday UTC daily maintenance)
+Modified principles: V. Stable Visual Health; Data Constraints > Test Runs and Results; Activity Simulation Rules > Scheduling
+Added sections:      None
 Removed sections:    None
 
 Resolved TODOs:
-  ✅ PYTHON_ENV → .venv/ is the authoritative interpreter; bare python/python3 prohibited
+  ✅ DAILY_CADENCE_POLICY → weekday-only daily schedule in UTC is the canonical activity cadence
 
 Templates reviewed:
   ✅ .specify/templates/plan-template.md    — No changes required
@@ -75,7 +75,7 @@ The workspace MUST always appear active, healthy, and under continuous developme
 
 Rules:
 - Overall pass rate MUST remain between **85–92%**
-- No long inactive periods (automation runs twice daily)
+- No long inactive periods (automation runs every weekday in UTC)
 - No severe metric drops across any consecutive window
 - Exactly one feature area MAY carry a consistently lower pass rate; this area is
   intentional and used for dashboard storytelling only
@@ -110,8 +110,8 @@ AI-generated test cases in CI are prohibited. Human-authored or human-approved c
 
 ### Test Runs and Results
 
-- Scheduled frequency: **twice per day** (via GitHub Actions)
-- Historical depth target: **~3 months** of back-filled history at workspace creation
+- Scheduled frequency: **once per weekday (Mon-Fri) in UTC** (via GitHub Actions)
+- Historical depth target: **accumulated through ongoing activity** (no back-filled run creation requirement at workspace creation)
 - Runs MUST follow sprint-like patterns with consistent cadence
 - Metrics MUST remain visually healthy across the full history window
 
@@ -196,7 +196,7 @@ Core scripts required:
 | 2 | Jira requirement generator | Bulk-create Epics + Stories in Jira                 |
 | 3 | Suite generator            | Create full suite tree in Qase  (30 suites)  from the CSV                   |
 | 4 | Test case generator        | Bulk-create 120 cases with custom fields from the CSV + Jira links |
-| 5 | Run simulator              | Create historical and ongoing test runs + results   |
+| 5 | Run simulator              | Create present-time and ongoing test runs + results |
 | 6 | Defect generator           | Create defects from failed results, manage lifecycle |
 | 7 | Maintenance / cleanup      | Archive stale data, enforce health rules            |
 
@@ -210,7 +210,7 @@ Step 1: workspace-init.py        —  Create Qase project, add custom fields, en
 Step 2: jira-requirements.py     — Bulk-create Epics + Stories in Jira
 Step 3: suite-generator.py       — Create full suite tree in Qase with 30 suites from the CSV
 Step 4: case-generator.py        — Bulk-create 120 cases with custom fields from the CSV + Jira links 
-Step 5: run-simulator.py         — Seed historical runs + results (~3 months)
+Step 5: run-simulator.py         — Seed present-time runs + results
 Step 6: defect-generator.py      — Create defects from failed results, manage lifecycle
 Step 7: maintenance.py           — Ongoing twice-daily activity simulation
 ```
@@ -320,7 +320,7 @@ without a constitution amendment.
 
 ### Scheduling
 
-- Automation MUST run **twice per day** (morning + evening cadence via GitHub Actions)
+- Automation MUST run **once per weekday (Mon-Fri) in UTC** via GitHub Actions
 - Each run batch MUST appear as organic team activity, not mechanical repetition
 - Seeded randomness ensures deterministic yet varied output
 
@@ -392,4 +392,4 @@ The `Constitution Check` section in every `plan.md` file exists for this purpose
 
 ---
 
-**Version**: 1.1.1 | **Ratified**: 2026-02-18 | **Last Amended**: 2026-02-24
+**Version**: 1.2.0 | **Ratified**: 2026-02-18 | **Last Amended**: 2026-02-27

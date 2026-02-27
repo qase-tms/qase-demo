@@ -56,28 +56,58 @@ configurations:
     items: [WiFi, 5G, 4G, Offline]
 
 shared_steps:
-  - title: "Login with valid credentials"
-    steps:
-      - action: "Navigate to login page"
-        expected_result: "Login page is displayed"
-      - action: "Enter valid username and password"
-        data: "username: {username}, password: {password}"
-        expected_result: "User is redirected to dashboard"
-  - title: "Add item to cart"
-    steps:
-      - action: "Navigate to product page for {product_name}"
-        expected_result: "Product page for {product_name} is displayed"
-      - action: "Click 'Add to Cart' button"
-        expected_result: "Item count in cart increments by 1"
-  - title: "Complete checkout with default payment"
-    steps:
-      - action: "Navigate to cart and proceed to checkout"
-        expected_result: "Checkout flow initiated"
-      - action: "Fill in required shipping and billing details"
-        data: "Shipping address: {shipping_address}, Billing address: {billing_address}"
-        expected_result: "Order summary is displayed with correct totals"
-      - action: "Click 'Place Order'"
-        expected_result: "Order confirmation page is displayed"
+  # 50 unique titles — step content is generated in workspace_init.py
+  # cycling three patterns: A (flat), B (2 levels deep), C (1 level deep)
+  - "Log in with registered user credentials"
+  - "Register new user account via email"
+  - "Reset password using email verification link"
+  - "Log out from all active sessions"
+  - "Verify email address after registration"
+  - "Attempt login with invalid credentials"
+  - "Lock account after repeated failed login attempts"
+  - "Update account password from profile settings"
+  - "Search for a product by keyword"
+  - "Filter search results by price range"
+  - "Sort products by customer rating"
+  - "Browse product category page"
+  - "View product detail page"
+  - "Apply multiple filters simultaneously"
+  - "Handle zero-results search query"
+  - "Navigate back from PDP to search results"
+  - "Add product to cart from product listing"
+  - "Add product to cart from PDP"
+  - "Remove item from shopping cart"
+  - "Update cart item quantity"
+  - "Merge guest cart with registered user cart"
+  - "Verify cart total with applicable tax"
+  - "Apply promo code to cart"
+  - "Validate cart item count badge"
+  - "Proceed from cart to checkout"
+  - "Enter and validate shipping address"
+  - "Select shipping method and review estimated cost"
+  - "Enter credit card payment details"
+  - "Complete 3DS card authentication flow"
+  - "Place order and review confirmation page"
+  - "Complete guest checkout without account"
+  - "Apply saved address at checkout"
+  - "View order history and filter by status"
+  - "View order detail and line items"
+  - "Cancel an in-progress order"
+  - "Track shipment status for a delivered order"
+  - "Download order invoice as PDF"
+  - "Reorder items from previous purchase"
+  - "Initiate a product return request"
+  - "Select return reason and upload supporting evidence"
+  - "Submit return and receive confirmation number"
+  - "Track refund status in order history"
+  - "Process refund for a returned item in admin"
+  - "Access admin dashboard and verify key metrics"
+  - "Search for customer account by email in admin"
+  - "Update order status in admin panel"
+  - "Add new product to the catalog"
+  - "Apply discount code to a customer order"
+  - "Generate sales report for a custom date range"
+  - "Suspend and reinstate a user account"
 
 shared_parameters:
   - name: "TestUserEmail"
@@ -110,7 +140,21 @@ seed:
   seed_value: 42
 
 simulation:
-  history_months: 3
+  # Script 5 creates present-time runs only (Qase sets create timestamps to now)
+  run_count: 20
   pass_rate_range: [0.85, 0.92]
   weak_suite: "04 Checkout"
   run_types: [Regression, Feature, Smoke]
+
+maintenance:
+  min_runs: 1
+  max_runs: 6
+  run_count_weights:
+    "1": 0.30
+    "2": 0.25
+    "3": 0.20
+    "4": 0.12
+    "5": 0.08
+    "6": 0.05
+  weekdays_only: true
+  schedule_timezone: "UTC"

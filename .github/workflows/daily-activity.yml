@@ -1,0 +1,13 @@
+name: Daily Maintenance Activity
+
+on:
+  schedule:
+    - cron: "0 6 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  maintenance:
+    uses: ./.github/workflows/workflow-orchestration.yml
+    with:
+      mode: maintenance
+    secrets: inherit

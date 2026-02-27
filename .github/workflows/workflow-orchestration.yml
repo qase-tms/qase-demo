@@ -1,0 +1,77 @@
+name: Workflow Orchestration
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Execution mode"
+        required: true
+        type: choice
+        options:
+          - init
+          - maintenance
+        default: init
+      seed:
+        description: "Optional deterministic seed override"
+        required: false
+        type: number
+      run_count:
+        description: "Optional run_simulator run count (init mode)"
+        required: false
+        type: number
+      min_runs:
+        description: "Optional maintenance minimum runs (1-6)"
+        required: false
+        type: number
+      max_runs:
+        description: "Optional maintenance maximum runs (1-6)"
+        required: false
+        type: number
+      dry_run:
+        description: "Preview execution with no API writes"
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    - cron: "0 6 * * 1-5"
+  workflow_call:
+    inputs:
+      mode:
+        required: false
+        type: string
+      seed:
+        required: false
+        type: number
+      run_count:
+        required: false
+        type: number
+      min_runs:
+        required: false
+        type: number
+      max_runs:
+        required: false
+        type: number
+      dry_run:
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: workflow-orchestration-maintenance
+  cancel-in-progress: false
+
+jobs:
+  orchestrate:
+    name: Orchestrate run
+    uses: ./.github/workflows/reusable-script-runner.yml
+    with:
+      mode: ${{ inputs.mode || github.event.inputs.mode || (github.event_name == 'schedule' && 'maintenance') || 'init' }}
+      seed: ${{ inputs.seed || github.event.inputs.seed || '' }}
+      run_count: ${{ inputs.run_count || github.event.inputs.run_count || '' }}
+      min_runs: ${{ inputs.min_runs || github.event.inputs.min_runs || '' }}
+      max_runs: ${{ inputs.max_runs || github.event.inputs.max_runs || '' }}
+      dry_run: ${{ inputs.dry_run || github.event.inputs.dry_run == 'true' || false }}
+    secrets: inherit
