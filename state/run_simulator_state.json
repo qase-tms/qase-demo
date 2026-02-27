@@ -1,0 +1,237 @@
+{
+  "attachment_hashes": [
+    "950a99059f21f1852033c4153b035136",
+    "b400c76e435de21a31967368fb2ecf91346a4a6a",
+    "b705fdeaa2cbd28ae1f2cceb0af1b04074d712b3"
+  ],
+  "last_execution": {
+    "timestamp_utc": "2026-02-27T11:13:15.801029+00:00",
+    "run_count": 20,
+    "completed_runs": 20,
+    "incomplete_runs": 0,
+    "seed": 42,
+    "project_code": "AA",
+    "runs": [
+      {
+        "run_id": 1,
+        "status": "completed",
+        "jira_issue_key": "AN-37",
+        "result_total": 94,
+        "passed": 94,
+        "failed": 0,
+        "skipped": 0,
+        "manual": 19,
+        "defect": 0
+      },
+      {
+        "run_id": 2,
+        "status": "completed",
+        "jira_issue_key": "AN-38",
+        "result_total": 114,
+        "passed": 96,
+        "failed": 15,
+        "skipped": 3,
+        "manual": 23,
+        "defect": 6
+      },
+      {
+        "run_id": 3,
+        "status": "completed",
+        "jira_issue_key": "AN-39",
+        "result_total": 94,
+        "passed": 94,
+        "failed": 0,
+        "skipped": 0,
+        "manual": 21,
+        "defect": 0
+      },
+      {
+        "run_id": 4,
+        "status": "completed",
+        "jira_issue_key": "AN-40",
+        "result_total": 95,
+        "passed": 95,
+        "failed": 0,
+        "skipped": 0,
+        "manual": 19,
+        "defect": 0
+      },
+      {
+        "run_id": 5,
+        "status": "completed",
+        "jira_issue_key": "AN-41",
+        "result_total": 118,
+        "passed": 96,
+        "failed": 18,
+        "skipped": 4,
+        "manual": 24,
+        "defect": 9
+      },
+      {
+        "run_id": 6,
+        "status": "completed",
+        "jira_issue_key": "AN-42",
+        "result_total": 96,
+        "passed": 80,
+        "failed": 13,
+        "skipped": 3,
+        "manual": 20,
+        "defect": 5
+      },
+      {
+        "run_id": 7,
+        "status": "completed",
+        "jira_issue_key": "AN-43",
+        "result_total": 80,
+        "passed": 62,
+        "failed": 17,
+        "skipped": 1,
+        "manual": 20,
+        "defect": 8
+      },
+      {
+        "run_id": 8,
+        "status": "completed",
+        "jira_issue_key": "AN-44",
+        "result_total": 94,
+        "passed": 94,
+        "failed": 0,
+        "skipped": 0,
+        "manual": 19,
+        "defect": 0
+      },
+      {
+        "run_id": 9,
+        "status": "completed",
+        "jira_issue_key": "AN-45",
+        "result_total": 87,
+        "passed": 87,
+        "failed": 0,
+        "skipped": 0,
+        "manual": 18,
+        "defect": 0
+      },
+      {
+        "run_id": 10,
+        "status": "completed",
+        "jira_issue_key": "AN-46",
+        "result_total": 111,
+        "passed": 97,
+        "failed": 10,
+        "skipped": 4,
+        "manual": 23,
+        "defect": 6
+      },
+      {
+        "run_id": 11,
+        "status": "completed",
+        "jira_issue_key": "AN-47",
+        "result_total": 118,
+        "passed": 100,
+        "failed": 16,
+        "skipped": 2,
+        "manual": 24,
+        "defect": 8
+      },
+      {
+        "run_id": 12,
+        "status": "completed",
+        "jira_issue_key": "AN-48",
+        "result_total": 106,
+        "passed": 91,
+        "failed": 14,
+        "skipped": 1,
+        "manual": 24,
+        "defect": 9
+      },
+      {
+        "run_id": 13,
+        "status": "completed",
+        "jira_issue_key": "AN-49",
+        "result_total": 94,
+        "passed": 75,
+        "failed": 17,
+        "skipped": 2,
+        "manual": 19,
+        "defect": 6
+      },
+      {
+        "run_id": 14,
+        "status": "completed",
+        "jira_issue_key": "AN-50",
+        "result_total": 84,
+        "passed": 75,
+        "failed": 7,
+        "skipped": 2,
+        "manual": 17,
+        "defect": 3
+      },
+      {
+        "run_id": 15,
+        "status": "completed",
+        "jira_issue_key": "AN-51",
+        "result_total": 96,
+        "passed": 75,
+        "failed": 17,
+        "skipped": 4,
+        "manual": 28,
+        "defect": 10
+      },
+      {
+        "run_id": 16,
+        "status": "completed",
+        "jira_issue_key": "AN-52",
+        "result_total": 104,
+        "passed": 81,
+        "failed": 16,
+        "skipped": 7,
+        "manual": 24,
+        "defect": 9
+      },
+      {
+        "run_id": 17,
+        "status": "completed",
+        "jira_issue_key": "AN-53",
+        "result_total": 96,
+        "passed": 96,
+        "failed": 0,
+        "skipped": 0,
+        "manual": 20,
+        "defect": 0
+      },
+      {
+        "run_id": 18,
+        "status": "completed",
+        "jira_issue_key": "AN-54",
+        "result_total": 104,
+        "passed": 87,
+        "failed": 14,
+        "skipped": 3,
+        "manual": 21,
+        "defect": 6
+      },
+      {
+        "run_id": 19,
+        "status": "completed",
+        "jira_issue_key": "AN-55",
+        "result_total": 108,
+        "passed": 83,
+        "failed": 17,
+        "skipped": 8,
+        "manual": 22,
+        "defect": 7
+      },
+      {
+        "run_id": 20,
+        "status": "completed",
+        "jira_issue_key": "AN-56",
+        "result_total": 97,
+        "passed": 75,
+        "failed": 20,
+        "skipped": 2,
+        "manual": 24,
+        "defect": 10
+      }
+    ]
+  }
+}

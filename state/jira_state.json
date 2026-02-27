@@ -1,0 +1,251 @@
+{
+  "project": {
+    "name": "ShopEase Web App (12)",
+    "key": "AN",
+    "id": 10207
+  },
+  "epics": {
+    "auth": {
+      "jira_key": "AN-1",
+      "jira_id": 11145,
+      "issue_type": "Epic"
+    },
+    "search": {
+      "jira_key": "AN-2",
+      "jira_id": 11146,
+      "issue_type": "Epic"
+    },
+    "cart": {
+      "jira_key": "AN-3",
+      "jira_id": 11147,
+      "issue_type": "Epic"
+    },
+    "checkout": {
+      "jira_key": "AN-4",
+      "jira_id": 11148,
+      "issue_type": "Epic"
+    },
+    "orders": {
+      "jira_key": "AN-5",
+      "jira_id": 11149,
+      "issue_type": "Epic"
+    },
+    "admin": {
+      "jira_key": "AN-6",
+      "jira_id": 11150,
+      "issue_type": "Epic"
+    }
+  },
+  "stories": {
+    "auth-1": {
+      "jira_key": "AN-7",
+      "jira_id": 11152,
+      "issue_type": "Story",
+      "epic_slug": "auth",
+      "summary": "User can sign up with email verification"
+    },
+    "auth-2": {
+      "jira_key": "AN-8",
+      "jira_id": 11154,
+      "issue_type": "Story",
+      "epic_slug": "auth",
+      "summary": "User can log in and maintain a secure session"
+    },
+    "auth-3": {
+      "jira_key": "AN-9",
+      "jira_id": 11156,
+      "issue_type": "Story",
+      "epic_slug": "auth",
+      "summary": "User can reset password via email token"
+    },
+    "auth-4": {
+      "jira_key": "AN-10",
+      "jira_id": 11158,
+      "issue_type": "Story",
+      "epic_slug": "auth",
+      "summary": "Account lockout triggers after repeated failed logins"
+    },
+    "auth-5": {
+      "jira_key": "AN-11",
+      "jira_id": 11160,
+      "issue_type": "Story",
+      "epic_slug": "auth",
+      "summary": "User can log out from all devices"
+    },
+    "search-1": {
+      "jira_key": "AN-12",
+      "jira_id": 11162,
+      "issue_type": "Story",
+      "epic_slug": "search",
+      "summary": "Search supports sorting and filter facets"
+    },
+    "search-2": {
+      "jira_key": "AN-13",
+      "jira_id": 11164,
+      "issue_type": "Story",
+      "epic_slug": "search",
+      "summary": "Product detail page shows variants and stock"
+    },
+    "search-3": {
+      "jira_key": "AN-14",
+      "jira_id": 11166,
+      "issue_type": "Story",
+      "epic_slug": "search",
+      "summary": "Category browse lists products with pagination"
+    },
+    "search-4": {
+      "jira_key": "AN-15",
+      "jira_id": 11168,
+      "issue_type": "Story",
+      "epic_slug": "search",
+      "summary": "Search handles zero-results and suggests alternatives"
+    },
+    "search-5": {
+      "jira_key": "AN-16",
+      "jira_id": 11170,
+      "issue_type": "Story",
+      "epic_slug": "search",
+      "summary": "Product images load with fallbacks"
+    },
+    "cart-1": {
+      "jira_key": "AN-17",
+      "jira_id": 11172,
+      "issue_type": "Story",
+      "epic_slug": "cart",
+      "summary": "Cart quantity updates validate stock"
+    },
+    "cart-2": {
+      "jira_key": "AN-18",
+      "jira_id": 11174,
+      "issue_type": "Story",
+      "epic_slug": "cart",
+      "summary": "Promo code application follows eligibility rules"
+    },
+    "cart-3": {
+      "jira_key": "AN-19",
+      "jira_id": 11176,
+      "issue_type": "Story",
+      "epic_slug": "cart",
+      "summary": "Shipping threshold promotion is applied"
+    },
+    "cart-4": {
+      "jira_key": "AN-20",
+      "jira_id": 11178,
+      "issue_type": "Story",
+      "epic_slug": "cart",
+      "summary": "Cart persists across sessions for returning users"
+    },
+    "cart-5": {
+      "jira_key": "AN-21",
+      "jira_id": 11180,
+      "issue_type": "Story",
+      "epic_slug": "cart",
+      "summary": "Cart merges guest items on login"
+    },
+    "checkout-1": {
+      "jira_key": "AN-22",
+      "jira_id": 11182,
+      "issue_type": "Story",
+      "epic_slug": "checkout",
+      "summary": "Guest checkout is supported"
+    },
+    "checkout-2": {
+      "jira_key": "AN-23",
+      "jira_id": 11184,
+      "issue_type": "Story",
+      "epic_slug": "checkout",
+      "summary": "Saved addresses can be selected at checkout"
+    },
+    "checkout-3": {
+      "jira_key": "AN-24",
+      "jira_id": 11186,
+      "issue_type": "Story",
+      "epic_slug": "checkout",
+      "summary": "Card payments succeed/fail with clear error states"
+    },
+    "checkout-4": {
+      "jira_key": "AN-25",
+      "jira_id": 11188,
+      "issue_type": "Story",
+      "epic_slug": "checkout",
+      "summary": "Checkout validates tax and totals before payment"
+    },
+    "checkout-5": {
+      "jira_key": "AN-26",
+      "jira_id": 11190,
+      "issue_type": "Story",
+      "epic_slug": "checkout",
+      "summary": "3DS / SCA flow is handled for card payments"
+    },
+    "orders-1": {
+      "jira_key": "AN-27",
+      "jira_id": 11192,
+      "issue_type": "Story",
+      "epic_slug": "orders",
+      "summary": "Order appears in order history after purchase"
+    },
+    "orders-2": {
+      "jira_key": "AN-28",
+      "jira_id": 11194,
+      "issue_type": "Story",
+      "epic_slug": "orders",
+      "summary": "User can initiate a return within policy window"
+    },
+    "orders-3": {
+      "jira_key": "AN-29",
+      "jira_id": 11196,
+      "issue_type": "Story",
+      "epic_slug": "orders",
+      "summary": "Refund status is visible and updated"
+    },
+    "orders-4": {
+      "jira_key": "AN-30",
+      "jira_id": 11198,
+      "issue_type": "Story",
+      "epic_slug": "orders",
+      "summary": "Order cancellation is possible before shipment"
+    },
+    "orders-5": {
+      "jira_key": "AN-31",
+      "jira_id": 11200,
+      "issue_type": "Story",
+      "epic_slug": "orders",
+      "summary": "Return shipping label is generated when eligible"
+    },
+    "admin-1": {
+      "jira_key": "AN-32",
+      "jira_id": 11202,
+      "issue_type": "Story",
+      "epic_slug": "admin",
+      "summary": "Admin can update product price and stock"
+    },
+    "admin-2": {
+      "jira_key": "AN-33",
+      "jira_id": 11204,
+      "issue_type": "Story",
+      "epic_slug": "admin",
+      "summary": "Admin can mark an order as shipped"
+    },
+    "admin-3": {
+      "jira_key": "AN-34",
+      "jira_id": 11206,
+      "issue_type": "Story",
+      "epic_slug": "admin",
+      "summary": "Admin roles restrict access to sensitive actions"
+    },
+    "admin-4": {
+      "jira_key": "AN-35",
+      "jira_id": 11208,
+      "issue_type": "Story",
+      "epic_slug": "admin",
+      "summary": "Admin can create and schedule a promotion"
+    },
+    "admin-5": {
+      "jira_key": "AN-36",
+      "jira_id": 11210,
+      "issue_type": "Story",
+      "epic_slug": "admin",
+      "summary": "Admin audit log captures catalog and order actions"
+    }
+  }
+}
