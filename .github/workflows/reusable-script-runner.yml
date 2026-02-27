@@ -247,14 +247,28 @@ jobs:
         run: |
           set -euo pipefail
           branch="automation/state"
-          git fetch origin "$branch" || true
-          if git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+          if git ls-remote --exit-code --heads origin "$branch" >/dev/null 2>&1; then
+            git fetch origin "$branch":"refs/remotes/origin/$branch"
             git checkout -B "$branch" "origin/$branch"
           else
             git checkout -B "$branch"
           fi
 
-          git add state/workspace_state.json state/run_simulator_state.json state/maintenance_state.json state/jira_state.json state/history || true
+          staged_any=false
+          for f in state/workspace_state.json state/run_simulator_state.json state/maintenance_state.json state/jira_state.json; do
+            if [[ -f "$f" ]]; then
+              git add "$f"
+              staged_any=true
+            fi
+          done
+          if [[ -d "state/history" ]]; then
+            git add state/history
+            staged_any=true
+          fi
+          if [[ "$staged_any" != "true" ]]; then
+            echo "No state files present to stage."
+            exit 0
+          fi
           if git diff --cached --quiet; then
             echo "No state changes to commit."
             exit 0
