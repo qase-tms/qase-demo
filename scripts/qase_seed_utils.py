@@ -42,3 +42,32 @@ def save_state(name: str, data: dict) -> None:
     except Exception:
         tmp.unlink(missing_ok=True)
         raise
+
+
+def load_attachment_hashes() -> list[str]:
+    """Read reusable attachment hashes from run_simulator state."""
+    state = load_state("run_simulator_state")
+    hashes = state.get("attachment_hashes") or []
+    if not isinstance(hashes, list):
+        return []
+    return [h for h in hashes if isinstance(h, str) and h]
+
+
+def save_attachment_hashes(hashes: list[str]) -> None:
+    """Persist reusable attachment hashes for future simulator runs."""
+    state = load_state("run_simulator_state")
+    state["attachment_hashes"] = [h for h in hashes if isinstance(h, str) and h]
+    save_state("run_simulator_state", state)
+
+
+def load_maintenance_state() -> dict:
+    """Read maintenance cycle state from state/maintenance_state.json."""
+    state = load_state("maintenance_state")
+    if not isinstance(state, dict):
+        return {}
+    return state
+
+
+def save_maintenance_state(data: dict) -> None:
+    """Persist maintenance cycle state to state/maintenance_state.json."""
+    save_state("maintenance_state", data)

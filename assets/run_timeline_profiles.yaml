@@ -1,0 +1,9 @@
+worker_range: [3, 5]
+
+duration_buckets_ms:
+  fast: [200, 800]
+  medium: [2000, 5000]
+  slow: [8000, 20000]
+
+idle_gap_ms: [2000, 7000]
+gap_frequency: 0.2

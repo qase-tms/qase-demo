@@ -1,0 +1,52 @@
+run_titles:
+  Regression:
+    - "Regression - Sprint 3 Checkout Stabilization"
+    - "Regression - Release Candidate Validation"
+    - "Regression - Cart and Checkout Reliability Sweep"
+  Feature:
+    - "Feature Validation - 3DS Payment Flow"
+    - "Feature Validation - Guest Checkout Address Rules"
+    - "Feature Validation - Cart Merge Duplication Fix"
+  Smoke:
+    - "Smoke - Post Deployment Production Check"
+    - "Smoke - Pre-Release Critical Path"
+    - "Smoke - Hotfix Verification Pass"
+
+run_descriptions:
+  Regression:
+    - "Covers broad suite scope after payment and checkout reliability changes."
+    - "Validates regressions across authentication, cart, checkout, and orders after merge."
+  Feature:
+    - "Targets a focused feature area impacted by current sprint change scope."
+    - "Verifies feature behavior under realistic data and execution mix."
+  Smoke:
+    - "Confirms critical user journeys remain stable after a deployment event."
+    - "Exercises high-risk happy-path and key guardrail checks."
+
+result_comments:
+  - "Observed expected behavior under current build and environment settings."
+  - "Execution matched acceptance criteria with no additional side effects."
+  - "Behavior aligned with expected outcome; no regression indicators found."
+  - "Result indicates intermittent instability under realistic execution timing."
+  - "Validation completed with environment-specific observations captured."
+
+tags:
+  - regression
+  - checkout
+  - release-candidate
+  - hotfix
+  - stability
+  - payments
+  - critical-path
+  - smoke
+  - feature-validation
+
+manual_step_actions:
+  - "Open the application and navigate to the target workflow"
+  - "Execute the user action sequence with provided test data"
+  - "Review expected outcome and capture any visible mismatch"
+
+auto_step_actions:
+  - "Launch browser context and navigate to scenario entry point"
+  - "Execute workflow action through automated control path"
+  - "Assert expected response and telemetry signals"

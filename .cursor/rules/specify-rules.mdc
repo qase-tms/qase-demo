@@ -5,6 +5,14 @@ Auto-generated from all feature plans. Last updated: 2026-02-19
 ## Active Technologies
 - Python 3.11 (matches the full workspace automation suite). + `csv` (stdlib), `urllib.request` (stdlib), `PyYAML` (≥5.4), `pathlib` (stdlib); shared helpers from `scripts/qase_seed_utils.py` (`get_qase_token`, `load_state`, `save_state`). (003-suite-generator)
 - `state/workspace_state.json` — read for `project_code`, merged with `suite_ids` on write. Atomic write via temp-file rename (provided by `save_state`). (003-suite-generator)
+- Python 3.14 (`.venv/` interpreter — never call `python` or `python3` directly) + `PyYAML` (config parsing), `urllib` stdlib (HTTP — no `requests`); all in `.venv/` (004-case-generator)
+- `state/workspace_state.json` (read + write), `state/jira_state.json` (read only), `QD-2026-02-18.csv` (read only) (004-case-generator)
+- Python 3.14 via `.venv/bin/python` only + stdlib (`json`, `csv`, `time`, `datetime`, `random`, `urllib`), shared helpers from `scripts/qase_seed_utils.py` and `scripts/jira_utils.py` (005-run-simulator-lifecycle)
+- `config/workspace.yaml`, `state/workspace_state.json`, `QD-2026-02-18.csv`, optional attachment hash cache in `state/` (005-run-simulator-lifecycle)
+- Python 3.14 via `.venv/bin/python` only + Python stdlib (`argparse`, `json`, `random`, `time`, `datetime`, `urllib`), `PyYAML`, shared helpers from `scripts/qase_seed_utils.py`, `scripts/jira_utils.py`, and lifecycle logic from `scripts/run_simulator.py` (006-maintenance-script)
+- `config/workspace.yaml`, `state/workspace_state.json`, `state/run_simulator_state.json`, optional `state/maintenance_state.json`, and `QD-2026-02-18.csv` (006-maintenance-script)
+- Python 3.14 for scripts; GitHub Actions YAML for orchestration + Repo scripts under `scripts/`; `PyYAML`; GitHub-hosted actions (`actions/checkout`, `actions/setup-python`) (007-workflow-orchestration-docs)
+- Repository-managed files in `config/`, `state/`, and workflow metadata in `.github/workflows/` (007-workflow-orchestration-docs)
 
 - Python 3.11 (matches the rest of the workspace automation suite). + `requests`, `PyYAML`, shared helpers (`scripts/qase_seed_utils.py`). (002-jira-requirements)
 
@@ -47,9 +55,10 @@ Never use bare `python`, `python3`, or run `pip install`. Never use a system int
 Python 3.11 (matches the rest of the workspace automation suite).: Follow standard conventions
 
 ## Recent Changes
-- 003-suite-generator: Added Python 3.11 (matches the full workspace automation suite). + `csv` (stdlib), `urllib.request` (stdlib), `PyYAML` (≥5.4), `pathlib` (stdlib); shared helpers from `scripts/qase_seed_utils.py` (`get_qase_token`, `load_state`, `save_state`).
+- 007-workflow-orchestration-docs: Added Python 3.14 for scripts; GitHub Actions YAML for orchestration + Repo scripts under `scripts/`; `PyYAML`; GitHub-hosted actions (`actions/checkout`, `actions/setup-python`)
+- 006-maintenance-script: Added Python 3.14 via `.venv/bin/python` only + Python stdlib (`argparse`, `json`, `random`, `time`, `datetime`, `urllib`), `PyYAML`, shared helpers from `scripts/qase_seed_utils.py`, `scripts/jira_utils.py`, and lifecycle logic from `scripts/run_simulator.py`
+- 005-run-simulator-lifecycle: Added Python 3.14 via `.venv/bin/python` only + stdlib (`json`, `csv`, `time`, `datetime`, `random`, `urllib`), shared helpers from `scripts/qase_seed_utils.py` and `scripts/jira_utils.py`
 
-- 002-jira-requirements: Added Python 3.11 (matches the rest of the workspace automation suite). + `requests`, `PyYAML`, shared helpers (`scripts/qase_seed_utils.py`).
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

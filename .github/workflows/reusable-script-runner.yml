@@ -1,0 +1,212 @@
+name: Reusable Script Runner
+
+on:
+  workflow_call:
+    inputs:
+      mode:
+        required: true
+        type: string
+      seed:
+        required: false
+        type: string
+      run_count:
+        required: false
+        type: string
+      min_runs:
+        required: false
+        type: string
+      max_runs:
+        required: false
+        type: string
+      dry_run:
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate mode and numeric inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mode="${{ inputs.mode }}"
+          if [[ "$mode" != "init" && "$mode" != "maintenance" ]]; then
+            echo "Invalid mode: '$mode'. Allowed values are init or maintenance."
+            exit 1
+          fi
+          is_int() { [[ "$1" =~ ^[0-9]+$ ]]; }
+          if [[ -n "${{ inputs.seed }}" ]] && ! is_int "${{ inputs.seed }}"; then
+            echo "seed must be a non-negative integer"
+            exit 1
+          fi
+          if [[ -n "${{ inputs.run_count }}" ]] && ! is_int "${{ inputs.run_count }}"; then
+            echo "run_count must be a non-negative integer"
+            exit 1
+          fi
+          if [[ -n "${{ inputs.min_runs }}" ]] && ! is_int "${{ inputs.min_runs }}"; then
+            echo "min_runs must be an integer in 1..6"
+            exit 1
+          fi
+          if [[ -n "${{ inputs.max_runs }}" ]] && ! is_int "${{ inputs.max_runs }}"; then
+            echo "max_runs must be an integer in 1..6"
+            exit 1
+          fi
+          if [[ -n "${{ inputs.min_runs }}" ]] && (( ${{ inputs.min_runs }} < 1 || ${{ inputs.min_runs }} > 6 )); then
+            echo "min_runs must be in 1..6"
+            exit 1
+          fi
+          if [[ -n "${{ inputs.max_runs }}" ]] && (( ${{ inputs.max_runs }} < 1 || ${{ inputs.max_runs }} > 6 )); then
+            echo "max_runs must be in 1..6"
+            exit 1
+          fi
+          if [[ -n "${{ inputs.min_runs }}" && -n "${{ inputs.max_runs }}" ]] && (( ${{ inputs.min_runs }} > ${{ inputs.max_runs }} )); then
+            echo "min_runs cannot be greater than max_runs"
+            exit 1
+          fi
+
+      - name: Preflight required credentials
+        shell: bash
+        env:
+          QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+        run: |
+          set -euo pipefail
+          required=(QASE_API_TOKEN JIRA_BASE_URL JIRA_EMAIL JIRA_API_TOKEN JIRA_PROJECT_KEY)
+          for key in "${required[@]}"; do
+            if [[ -z "${!key:-}" ]]; then
+              echo "Missing required secret: $key"
+              echo "Add it in repository Settings -> Secrets and variables -> Actions."
+              exit 1
+            fi
+          done
+
+      - name: Verify project virtual environment runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! -x ".venv/bin/python" ]]; then
+            echo "Missing .venv/bin/python runtime."
+            echo "Create the project virtual environment and dependencies before using this workflow."
+            exit 1
+          fi
+          .venv/bin/python --version
+
+      - name: Build execution args
+        id: args
+        shell: bash
+        run: |
+          set -euo pipefail
+          mode="${{ inputs.mode }}"
+          args=()
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+          if [[ -n "${{ inputs.seed }}" ]]; then
+            args+=(--seed "${{ inputs.seed }}")
+          fi
+          if [[ "$mode" == "init" ]]; then
+            if [[ -n "${{ inputs.run_count }}" ]]; then
+              args+=(--run-count "${{ inputs.run_count }}")
+            fi
+          else
+            if [[ ! -f "state/workspace_state.json" ]]; then
+              echo "Missing state/workspace_state.json precondition for maintenance mode."
+              echo "Run init mode first to bootstrap workspace state."
+              exit 1
+            fi
+            if [[ -n "${{ inputs.min_runs }}" ]]; then
+              args+=(--min-runs "${{ inputs.min_runs }}")
+            fi
+            if [[ -n "${{ inputs.max_runs }}" ]]; then
+              args+=(--max-runs "${{ inputs.max_runs }}")
+            fi
+          fi
+          printf "args=%q " "${args[@]}" >> "$GITHUB_OUTPUT"
+          echo >> "$GITHUB_OUTPUT"
+
+      - name: Execute init chain (fail-fast)
+        if: inputs.mode == 'init'
+        shell: bash
+        env:
+          QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+        run: |
+          set -euo pipefail
+          common_args=""
+          if [[ "${{ inputs.dry_run }}" == "true" ]]; then
+            common_args="--dry-run"
+          fi
+          echo "Running step 1: workspace_init.py"
+          .venv/bin/python scripts/workspace_init.py $common_args
+          echo "Running step 2: suite_generator.py"
+          .venv/bin/python scripts/suite_generator.py $common_args
+          echo "Running step 3: jira_requirements.py create"
+          .venv/bin/python scripts/jira_requirements.py create $common_args
+          echo "Running step 4: case_generator.py"
+          .venv/bin/python scripts/case_generator.py $common_args
+          echo "Running step 5: run_simulator.py"
+          .venv/bin/python scripts/run_simulator.py ${{ steps.args.outputs.args }}
+
+      - name: Execute maintenance
+        if: inputs.mode == 'maintenance'
+        shell: bash
+        env:
+          QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
+        run: |
+          set -euo pipefail
+          echo "Concurrency guard enabled at parent workflow."
+          .venv/bin/python scripts/maintenance.py ${{ steps.args.outputs.args }}
+
+      - name: Enforce state retention window
+        if: inputs.dry_run == false
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p state/history
+          find state/history -type f -name '*.json' -mtime +90 -delete || true
+
+      - name: Commit state snapshots to automation/state branch
+        if: inputs.dry_run == false
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch="automation/state"
+          git fetch origin "$branch" || true
+          if git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+            git checkout -B "$branch" "origin/$branch"
+          else
+            git checkout -B "$branch"
+          fi
+
+          git add state/workspace_state.json state/run_simulator_state.json state/maintenance_state.json state/history || true
+          if git diff --cached --quiet; then
+            echo "No state changes to commit."
+            exit 0
+          fi
+
+          GIT_AUTHOR_NAME="github-actions[bot]" \
+          GIT_AUTHOR_EMAIL="github-actions[bot]@users.noreply.github.com" \
+          GIT_COMMITTER_NAME="github-actions[bot]" \
+          GIT_COMMITTER_EMAIL="github-actions[bot]@users.noreply.github.com" \
+          git commit -m "chore: update workflow state snapshots"
+          git push origin "$branch"
