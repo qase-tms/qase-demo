@@ -74,6 +74,7 @@ Add these under **Settings -> Secrets and variables -> Actions -> Repository sec
 Keep defaults and simulation tuning in:
 
 - `config/workspace.yaml`
+- `requirements.txt` (workflow runtime dependencies installed in CI)
 
 These values are not GitHub secrets and should be reviewed before the first run.
 

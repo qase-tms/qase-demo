@@ -48,46 +48,7 @@ jobs:
             python -m venv .venv
           fi
           .venv/bin/pip install --upgrade pip
-          deps="$(
-            .venv/bin/python - <<'PY'
-          import ast
-          from pathlib import Path
-
-          scripts_dir = Path("scripts")
-          stdlib = set(getattr(__import__("sys"), "stdlib_module_names", set()))
-          local_modules = {p.stem for p in scripts_dir.rglob("*.py")}
-          local_modules.update({"scripts"})
-          third_party = set()
-
-          for py_file in scripts_dir.rglob("*.py"):
-              try:
-                  tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
-              except Exception:
-                  continue
-              for node in ast.walk(tree):
-                  if isinstance(node, ast.Import):
-                      names = [n.name for n in node.names]
-                  elif isinstance(node, ast.ImportFrom) and node.module:
-                      names = [node.module]
-                  else:
-                      continue
-                  for name in names:
-                      top = name.split(".")[0]
-                      if not top or top in stdlib or top in local_modules:
-                          continue
-                      third_party.add(top)
-
-          mapping = {
-              "yaml": "pyyaml",
-          }
-
-          packages = sorted({mapping.get(mod, mod) for mod in third_party})
-          print(" ".join(packages))
-          PY
-          )"
-          if [[ -n "$deps" ]]; then
-            .venv/bin/pip install $deps
-          fi
+          .venv/bin/pip install -r requirements.txt
 
       - name: Validate mode and numeric inputs
         shell: bash
