@@ -48,15 +48,6 @@ This repository provides an orchestration flow with:
    - `JIRA_API_TOKEN`
    - Optional override: `JIRA_PROJECT_KEY` (only if you want to force a specific project)
 
-### Local verification
-
-Use the repository virtual environment:
-
-```bash
-cd "/Users/manju/qase-tms/qase-demo"
-.venv/bin/python scripts/qase_verify_token.py
-```
-
 ## GitHub Secrets and Variables Setup
 
 ### Repository secrets (required)
@@ -67,16 +58,13 @@ Add these under **Settings -> Secrets and variables -> Actions -> Repository sec
 - `JIRA_BASE_URL`
 - `JIRA_EMAIL`
 - `JIRA_API_TOKEN`
-- Optional: `JIRA_PROJECT_KEY` (normally auto-resolved from `state/jira_state.json`)
 
-### Non-secret configuration (required)
+### Configuration
 
-Keep defaults and simulation tuning in:
+Keeps defaults and simulation tuning in:
 
 - `config/workspace.yaml`
 - `requirements.txt` (workflow runtime dependencies installed in CI)
-
-These values are not GitHub secrets and should be reviewed before the first run.
 
 ## Manual Trigger Inputs
 
@@ -93,22 +81,16 @@ When running `Workflow Orchestration` manually (`workflow_dispatch`), use:
 
 ## How to Run
 
-### First-time safe path
+### First-time
 
-1. Trigger `Workflow Orchestration` with:
+- Trigger `Workflow Orchestration` with:
    - `mode=init`
-   - `dry_run=true`
-2. Validate logs and input handling.
-3. Re-run with:
-   - `mode=init`
-   - `dry_run=false`
-4. Confirm state files are produced and updated under `state/`.
 
-### Ongoing maintenance
+### Ongoing maintenance (automatic)
 
 - Scheduled via weekdays UTC cadence (`Mon-Fri`) through `daily-activity.yml`.
 - Can also be manually dispatched with `mode=maintenance` for validation.
-- Maintenance becomes active only after the init flow has produced bootstrap state (`state/workspace_state.json` + `state/jira_state.json` on `automation/state` branch); until then scheduled maintenance runs are skipped with an info message.
+- Maintenance becomes active **only after** the init flow has produced bootstrap state (`state/workspace_state.json` + `state/jira_state.json` on `automation/state` branch); until then scheduled maintenance runs are skipped with an info message.
 
 ## State Writeback and Branch Protection
 
