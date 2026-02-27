@@ -1,0 +1,113 @@
+{
+  "active_cycle": null,
+  "history": [
+    {
+      "cycle_id": "maint-20260227T111800-1d180b8e",
+      "status": "completed",
+      "skip_reason": null,
+      "started_at_utc": "2026-02-27T11:18:00.418421+00:00",
+      "ended_at_utc": "2026-02-27T11:18:08.180958+00:00",
+      "timezone_basis": "UTC",
+      "weekday_allowed": true,
+      "run_count_requested": 3,
+      "run_count_completed": 3,
+      "run_count_incomplete": 0,
+      "duration_seconds": 7.762,
+      "seed": 42,
+      "dry_run": false,
+      "runs": [
+        {
+          "run_id": 21,
+          "status": "completed",
+          "jira_issue_key": "AN-57",
+          "result_total": 69,
+          "passed": 69,
+          "failed": 0,
+          "skipped": 0,
+          "manual": 14,
+          "defect": 0
+        },
+        {
+          "run_id": 22,
+          "status": "completed",
+          "jira_issue_key": "AN-58",
+          "result_total": 53,
+          "passed": 38,
+          "failed": 9,
+          "skipped": 6,
+          "manual": 11,
+          "defect": 4
+        },
+        {
+          "run_id": 23,
+          "status": "completed",
+          "jira_issue_key": "AN-59",
+          "result_total": 59,
+          "passed": 50,
+          "failed": 7,
+          "skipped": 2,
+          "manual": 12,
+          "defect": 2
+        }
+      ]
+    }
+  ],
+  "last_cycle": {
+    "cycle_id": "maint-20260227T111800-1d180b8e",
+    "status": "completed",
+    "skip_reason": null,
+    "started_at_utc": "2026-02-27T11:18:00.418421+00:00",
+    "ended_at_utc": "2026-02-27T11:18:08.180958+00:00",
+    "timezone_basis": "UTC",
+    "weekday_allowed": true,
+    "run_count_requested": 3,
+    "run_count_completed": 3,
+    "run_count_incomplete": 0,
+    "duration_seconds": 7.762,
+    "seed": 42,
+    "dry_run": false,
+    "runs": [
+      {
+        "run_id": 21,
+        "status": "completed",
+        "jira_issue_key": "AN-57",
+        "result_total": 69,
+        "passed": 69,
+        "failed": 0,
+        "skipped": 0,
+        "manual": 14,
+        "defect": 0
+      },
+      {
+        "run_id": 22,
+        "status": "completed",
+        "jira_issue_key": "AN-58",
+        "result_total": 53,
+        "passed": 38,
+        "failed": 9,
+        "skipped": 6,
+        "manual": 11,
+        "defect": 4
+      },
+      {
+        "run_id": 23,
+        "status": "completed",
+        "jira_issue_key": "AN-59",
+        "result_total": 59,
+        "passed": 50,
+        "failed": 7,
+        "skipped": 2,
+        "manual": 12,
+        "defect": 2
+      }
+    ]
+  },
+  "metrics": {
+    "window_size": 1,
+    "rolling_14_day_success_count": 1,
+    "rolling_14_day_success_rate": 1.0,
+    "rolling_14_day_weekday_utc_compliance_count": 1,
+    "rolling_14_day_weekday_utc_compliance_rate": 1.0,
+    "rolling_avg_duration_seconds": 7.762
+  }
+}
