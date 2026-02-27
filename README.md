@@ -46,7 +46,7 @@ This repository provides an orchestration flow with:
    - `JIRA_BASE_URL` (for example: `https://your-org.atlassian.net`)
    - `JIRA_EMAIL`
    - `JIRA_API_TOKEN`
-   - `JIRA_PROJECT_KEY`
+   - Optional override: `JIRA_PROJECT_KEY` (only if you want to force a specific project)
 
 ### Local verification
 
@@ -67,7 +67,7 @@ Add these under **Settings -> Secrets and variables -> Actions -> Repository sec
 - `JIRA_BASE_URL`
 - `JIRA_EMAIL`
 - `JIRA_API_TOKEN`
-- `JIRA_PROJECT_KEY`
+- Optional: `JIRA_PROJECT_KEY` (normally auto-resolved from `state/jira_state.json`)
 
 ### Non-secret configuration (required)
 
@@ -105,8 +105,9 @@ When running `Workflow Orchestration` manually (`workflow_dispatch`), use:
 
 ### Ongoing maintenance
 
-- Scheduled via weekdays UTC cadence (`Mon-Fri`) through workflow scheduling.
+- Scheduled via weekdays UTC cadence (`Mon-Fri`) through `daily-activity.yml`.
 - Can also be manually dispatched with `mode=maintenance` for validation.
+- Maintenance becomes active only after the init flow has produced bootstrap state (`state/workspace_state.json` + `state/jira_state.json` on `automation/state` branch); until then scheduled maintenance runs are skipped with an info message.
 
 ## State Writeback and Branch Protection
 
@@ -132,7 +133,7 @@ Automation/state retention policy:
 |---|---|---|
 | Workflow fails at preflight | Missing repository secret | Add missing secret in repository Actions secrets |
 | Init fails mid-chain | Step-specific script failure | Fix failing step cause and rerun init (fail-fast preserves ordering) |
-| Maintenance blocked | Missing `state/workspace_state.json` | Run init mode first |
+| Maintenance skipped before bootstrap | Missing bootstrap state (`workspace_state.json` or `jira_state.json`) | Run init mode once and let state commit to `automation/state` |
 | Maintenance overlap behavior | Existing run in progress | Wait for current run or inspect concurrency queue |
 | State branch not updated | Permission/protection mismatch | Verify `contents: write`, branch policy, and workflow token rights |
 

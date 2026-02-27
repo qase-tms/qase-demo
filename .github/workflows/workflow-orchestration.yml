@@ -32,8 +32,6 @@ on:
         required: false
         type: boolean
         default: false
-  schedule:
-    - cron: "0 6 * * 1-5"
   workflow_call:
     inputs:
       mode:
@@ -60,7 +58,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: workflow-orchestration-maintenance
+  group: workflow-orchestration-${{ inputs.mode || github.event.inputs.mode || 'init' }}
   cancel-in-progress: false
 
 jobs:
@@ -68,10 +66,10 @@ jobs:
     name: Orchestrate run
     uses: ./.github/workflows/reusable-script-runner.yml
     with:
-      mode: ${{ inputs.mode || github.event.inputs.mode || (github.event_name == 'schedule' && 'maintenance') || 'init' }}
-      seed: ${{ inputs.seed || github.event.inputs.seed || '' }}
-      run_count: ${{ inputs.run_count || github.event.inputs.run_count || '' }}
-      min_runs: ${{ inputs.min_runs || github.event.inputs.min_runs || '' }}
-      max_runs: ${{ inputs.max_runs || github.event.inputs.max_runs || '' }}
+      mode: ${{ inputs.mode || github.event.inputs.mode || 'init' }}
+      seed: ${{ inputs.seed != null && format('{0}', inputs.seed) || (github.event.inputs.seed != '' && github.event.inputs.seed || '') }}
+      run_count: ${{ inputs.run_count != null && format('{0}', inputs.run_count) || (github.event.inputs.run_count != '' && github.event.inputs.run_count || '') }}
+      min_runs: ${{ inputs.min_runs != null && format('{0}', inputs.min_runs) || (github.event.inputs.min_runs != '' && github.event.inputs.min_runs || '') }}
+      max_runs: ${{ inputs.max_runs != null && format('{0}', inputs.max_runs) || (github.event.inputs.max_runs != '' && github.event.inputs.max_runs || '') }}
       dry_run: ${{ inputs.dry_run || github.event.inputs.dry_run == 'true' || false }}
     secrets: inherit

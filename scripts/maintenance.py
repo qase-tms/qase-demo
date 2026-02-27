@@ -28,6 +28,7 @@ from run_simulator import (
     _load_timeline_profile,
     _pick_title_and_description,
     _qase_json_request,
+    _resolve_jira_project_key,
     _read_csv_rows,
     _read_json,
     _read_yaml,
@@ -51,7 +52,14 @@ def _resolve_paths(args: argparse.Namespace) -> dict[str, Path]:
     repo_root = Path(__file__).resolve().parents[1]
     config_path = Path(args.config).resolve() if args.config else repo_root / "config" / "workspace.yaml"
     state_path = Path(args.state).resolve() if args.state else repo_root / "state" / "workspace_state.json"
-    csv_path = Path(args.csv).resolve() if args.csv else repo_root / "QD-2026-02-18.csv"
+    if args.csv:
+        csv_path = Path(args.csv).resolve()
+    else:
+        cfg = _read_yaml(config_path)
+        csv_rel = str(((cfg.get("seed") or {}).get("cases_csv") or "assets/seed-data/QD-2026-02-18.csv")).strip()
+        csv_path = Path(csv_rel)
+        if not csv_path.is_absolute():
+            csv_path = (repo_root / csv_path).resolve()
     templates_path = repo_root / "assets" / "run_simulator_templates.yaml"
     timeline_profile_path = repo_root / "assets" / "run_timeline_profiles.yaml"
     return {
@@ -204,8 +212,9 @@ def main() -> None:
     rng = random.Random(seed_value)
     limiter = RateLimiter(RATE_INTERVAL_SECONDS)
     token = get_qase_token() if not args.dry_run else (os.environ.get("QASE_API_TOKEN") or "")
+    jira_project_key = _resolve_jira_project_key(paths["repo_root"]) if not args.dry_run else ""
     if not args.dry_run:
-        required = ["JIRA_BASE_URL", "JIRA_EMAIL", "JIRA_API_TOKEN", "JIRA_PROJECT_KEY"]
+        required = ["JIRA_BASE_URL", "JIRA_EMAIL", "JIRA_API_TOKEN"]
         missing = [name for name in required if not (os.environ.get(name) or "").strip()]
         if missing:
             raise SimulationError(f"Missing required env vars for live maintenance run: {', '.join(missing)}")
@@ -330,7 +339,13 @@ def main() -> None:
             )
             jira_labels = ["qa-maintenance", run_type.lower(), "qase-run"]
             try:
-                jira_issue = _jira_create_task(jira_summary, jira_desc, jira_labels, limiter)
+                jira_issue = _jira_create_task(
+                    jira_summary,
+                    jira_desc,
+                    jira_labels,
+                    limiter,
+                    jira_project_key,
+                )
             except Exception as exc:
                 run_summaries.append({"run_id": run_id, "status": "incomplete", "reason": f"jira-create-failed: {exc}"})
                 print(f"[ERROR] Run {run_id} incomplete due to Jira create failure: {exc}")

@@ -1,7 +1,7 @@
 """
 Jira requirement provisioning script.
 
-Reads ``jira-requirements.seed.yaml`` and ``config/workspace.yaml``, creates a
+Reads ``config/seeds/jira-requirements.seed.yaml`` and ``config/workspace.yaml``, creates a
 Jira project (with duplicate-safe naming and key selection), bulk-creates Epics
 and Stories, then persists a slug → Jira key/ID/type mapping to
 ``state/jira_state.json``.
@@ -288,7 +288,7 @@ def select_project_key(existing_keys: Set[str]) -> str:
     """
     Return the lexicographically first two-letter alphabetic project key that
     is not present in ``existing_keys`` (case-insensitive).
-    Mirrors the ``workspace_init.py`` strategy.
+    Mirrors the ``scripts/workspace_init.py`` strategy.
     """
     upper_existing = {k.upper() for k in existing_keys}
     for code in _all_two_letter_codes():
@@ -950,12 +950,12 @@ def _add_credential_args(p: argparse.ArgumentParser) -> None:
 
 def main(argv: List[str]) -> int:
     parser = argparse.ArgumentParser(
-        description="Provision Jira epics/stories from jira-requirements.seed.yaml",
+        description="Provision Jira epics/stories from config/seeds/jira-requirements.seed.yaml",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  python scripts/jira_requirements.py create --dry-run\n"
-            "  python scripts/jira_requirements.py create --seed jira-requirements.seed.yaml\n"
+            "  python scripts/jira_requirements.py create --seed config/seeds/jira-requirements.seed.yaml\n"
             "  python scripts/jira_requirements.py discover --project-key AB\n"
         ),
     )
@@ -971,8 +971,8 @@ def main(argv: List[str]) -> int:
     p_create = sub.add_parser("create", help="Create Jira project + issues from seed")
     _add_credential_args(p_create)
     p_create.add_argument(
-        "--seed", default="jira-requirements.seed.yaml",
-        help="Path to requirements seed YAML (default: jira-requirements.seed.yaml)",
+        "--seed", default="config/seeds/jira-requirements.seed.yaml",
+        help="Path to requirements seed YAML (default: config/seeds/jira-requirements.seed.yaml)",
     )
     p_create.add_argument(
         "--project-name", dest="project_name", default=None,

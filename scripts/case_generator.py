@@ -17,7 +17,7 @@ Credential lookup:
 Usage:
   .venv/bin/python scripts/case_generator.py [--csv PATH] [--config PATH] [--dry-run]
   .venv/bin/python scripts/case_generator.py --dry-run
-  .venv/bin/python scripts/case_generator.py --csv QD-2026-02-18.csv
+  .venv/bin/python scripts/case_generator.py --csv assets/seed-data/QD-2026-02-18.csv
 
 Design principles:
   - Idempotent: GET /case preflight checks (title, suite_id) before creating;
@@ -363,12 +363,12 @@ def _validate_preflight(
         if cf_name not in state_custom_fields:
             errors.append(
                 f"  custom_fields['{cf_name}'] not found in state "
-                "(expected to be written by workspace_init.py)"
+                "(expected to be written by scripts/workspace_init.py)"
             )
         elif "options" not in state_custom_fields[cf_name]:
             errors.append(
                 f"  custom_fields['{cf_name}'].options missing from state "
-                "(workspace_init.py must persist option IDs — see plan.md D-01)"
+                "(scripts/workspace_init.py must persist option IDs — see plan.md D-01)"
             )
 
     # (c) Domain slugs → jira stories
@@ -416,12 +416,12 @@ def _build_cf_maps(
         if not entry:
             sys.exit(
                 f"Error: custom_fields['{cf_name}'] not found in state. "
-                "Run workspace_init.py first."
+                "Run scripts/workspace_init.py first."
             )
         if "options" not in entry:
             sys.exit(
                 f"Error: custom_fields['{cf_name}'].options missing from state. "
-                "workspace_init.py must persist option IDs (see plan.md D-01)."
+                "scripts/workspace_init.py must persist option IDs (see plan.md D-01)."
             )
         cf_id_map[cf_name]     = entry["id"]
         cf_option_map[cf_name] = entry["options"]
@@ -617,7 +617,7 @@ def _fetch_existing_cases(
             if exc.status == 404:
                 sys.exit(
                     f"Error: project_code {project_code!r} not found in Qase (HTTP 404). "
-                    "Verify state/workspace_state.json was written by workspace_init.py."
+                    "Verify state/workspace_state.json was written by scripts/workspace_init.py."
                 )
             raise
 
@@ -1055,7 +1055,7 @@ def _run(args: argparse.Namespace) -> None:
     if not project_code:
         sys.exit(
             "Error: project_code not found in state/workspace_state.json. "
-            "Run workspace_init.py first."
+            "Run scripts/workspace_init.py first."
         )
 
     # ------------------------------------------------------------------ #
@@ -1177,7 +1177,7 @@ def main() -> None:
             "examples:\n"
             "  .venv/bin/python scripts/case_generator.py\n"
             "  .venv/bin/python scripts/case_generator.py --dry-run\n"
-            "  .venv/bin/python scripts/case_generator.py --csv QD-2026-02-18.csv\n"
+            "  .venv/bin/python scripts/case_generator.py --csv assets/seed-data/QD-2026-02-18.csv\n"
         ),
     )
     parser.add_argument(

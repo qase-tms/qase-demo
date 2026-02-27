@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-workspace_init.py — Step 1 of 7: Qase workspace foundation
+scripts/workspace_init.py — Step 1 of 7: Qase workspace foundation
 ============================================================
 Creates (or reconciles) every workspace-level entity required by downstream
 pipeline scripts, then writes ``state/workspace_state.json`` atomically.
@@ -718,7 +718,7 @@ def _run(args: argparse.Namespace) -> None:
     proj_name = proj_cfg.get("name", "ShopEase Web App")
     proj_desc = proj_cfg.get("description", "")
 
-    print(f"=== workspace_init.py {'(DRY-RUN) ' if dry_run else ''}===")
+    print(f"=== scripts/workspace_init.py {'(DRY-RUN) ' if dry_run else ''}===")
     print(f"Config: {config_path}")
     print(f"Target project: {proj_name!r}\n")
 
@@ -820,7 +820,7 @@ def _run(args: argparse.Namespace) -> None:
 
     # ── summary ───────────────────────────────────────────────────────────────
     print(f"\n{'='*50}")
-    print(f"workspace_init.py complete")
+    print(f"scripts/workspace_init.py complete")
     print(f"  project_code:    {code}")
     print(f"  custom_fields:   {len(cf_result)}")
     print(f"  milestones:      {len(milestone_ids)}")

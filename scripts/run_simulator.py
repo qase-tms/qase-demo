@@ -196,11 +196,11 @@ def _jira_create_task(
     description: str,
     labels: list[str],
     limiter: RateLimiter,
+    jira_project_key: str,
 ) -> dict[str, str]:
     headers, base_url = jira_auth_headers()
-    jira_project_key = str((os.environ.get("JIRA_PROJECT_KEY") or "").strip())
     if not jira_project_key:
-        raise SimulationError("Missing required env var: JIRA_PROJECT_KEY")
+        raise SimulationError("Jira project key resolution failed")
     payload = {
         "fields": {
             "project": {"key": jira_project_key},
@@ -233,6 +233,27 @@ def _jira_create_task(
     if not issue_id or not issue_key:
         raise SimulationError(f"Jira issue create response missing id/key: {resp}")
     return {"id": issue_id, "key": issue_key}
+
+
+def _resolve_jira_project_key(repo_root: Path) -> str:
+    env_value = str((os.environ.get("JIRA_PROJECT_KEY") or "").strip())
+    if env_value:
+        return env_value
+    state_path = repo_root / "state" / "jira_state.json"
+    if state_path.exists():
+        try:
+            state = json.loads(state_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise SimulationError(f"Unable to parse Jira state file {state_path}: {exc}") from exc
+        project = state.get("project") if isinstance(state, dict) else None
+        if isinstance(project, dict):
+            key = str((project.get("key") or "")).strip()
+            if key:
+                return key
+    raise SimulationError(
+        "Jira project key not found. Set JIRA_PROJECT_KEY or run jira_requirements.py create "
+        "to generate state/jira_state.json with project.key."
+    )
 
 
 def _load_templates(path: Path) -> dict[str, Any]:
@@ -633,7 +654,14 @@ def _resolve_paths(args: argparse.Namespace) -> dict[str, Path]:
     repo_root = Path(__file__).resolve().parents[1]
     config_path = Path(args.config).resolve() if args.config else repo_root / "config" / "workspace.yaml"
     state_path = Path(args.state).resolve() if args.state else repo_root / "state" / "workspace_state.json"
-    csv_path = Path(args.csv).resolve() if args.csv else repo_root / "QD-2026-02-18.csv"
+    if args.csv:
+        csv_path = Path(args.csv).resolve()
+    else:
+        cfg = _read_yaml(config_path)
+        csv_rel = str(((cfg.get("seed") or {}).get("cases_csv") or "assets/seed-data/QD-2026-02-18.csv")).strip()
+        csv_path = Path(csv_rel)
+        if not csv_path.is_absolute():
+            csv_path = (repo_root / csv_path).resolve()
     templates_path = repo_root / "assets" / "run_simulator_templates.yaml"
     timeline_profile_path = repo_root / "assets" / "run_timeline_profiles.yaml"
     return {
@@ -746,6 +774,7 @@ def main() -> None:
     args = _parse_args()
     paths = _resolve_paths(args)
     token = get_qase_token() if not args.dry_run else (os.environ.get("QASE_API_TOKEN") or "")
+    jira_project_key = _resolve_jira_project_key(paths["repo_root"]) if not args.dry_run else ""
     limiter = RateLimiter(RATE_INTERVAL_SECONDS)
 
     config = _read_yaml(paths["config"])
@@ -855,7 +884,13 @@ def main() -> None:
         jira_labels = ["qa-simulation", run_type.lower(), "qase-run"]
 
         try:
-            jira_issue = _jira_create_task(jira_summary, jira_desc, jira_labels, limiter)
+            jira_issue = _jira_create_task(
+                jira_summary,
+                jira_desc,
+                jira_labels,
+                limiter,
+                jira_project_key,
+            )
         except Exception as exc:
             _mark_incomplete_run(run_summaries, run_id, f"jira-create-failed: {exc}")
             print(f"[ERROR] Run {run_id} left incomplete due to Jira create failure: {exc}")

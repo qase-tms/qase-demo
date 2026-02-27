@@ -272,7 +272,7 @@ def _fetch_existing_suites(project_code: str, token: str) -> Dict[str, int]:
             if exc.status == 404:
                 sys.exit(
                     f"Error: project_code {project_code!r} not found in Qase (HTTP 404). "
-                    "Verify state/workspace_state.json was written by workspace_init.py."
+                    "Verify state/workspace_state.json was written by scripts/workspace_init.py."
                 )
             raise
         result = resp.get("result", {})
@@ -404,7 +404,7 @@ def _run(args: argparse.Namespace) -> None:
     if not project_code:
         sys.exit(
             "Error: project_code not found in state/workspace_state.json. "
-            "Run workspace_init.py first."
+            "Run scripts/workspace_init.py first."
         )
 
     token = get_qase_token()
@@ -514,7 +514,7 @@ def main() -> None:
             "examples:\n"
             "  python scripts/suite_generator.py\n"
             "  python scripts/suite_generator.py --dry-run\n"
-            "  python scripts/suite_generator.py --csv QD-2026-02-18.csv\n"
+            "  python scripts/suite_generator.py --csv assets/seed-data/QD-2026-02-18.csv\n"
             "  python scripts/suite_generator.py --config config/workspace.yaml\n"
         ),
     )

@@ -150,7 +150,7 @@ This environment is already created and contains all required dependencies.
 
 **Correct invocation:**
 ```
-.venv/bin/python workspace_init.py
+.venv/bin/python scripts/workspace_init.py
 .venv/bin/python scripts/jira_requirements.py create
 .venv/bin/python scripts/suite_generator.py
 ```

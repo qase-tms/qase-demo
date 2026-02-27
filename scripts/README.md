@@ -20,7 +20,7 @@ Required env vars:
 - `JIRA_BASE_URL`
 - `JIRA_EMAIL`
 - `JIRA_API_TOKEN`
-- `JIRA_PROJECT_KEY`
+- optional `JIRA_PROJECT_KEY` override (default source is `state/jira_state.json -> project.key`)
 
 Dry-run:
 
@@ -42,7 +42,7 @@ Required env vars:
 - `JIRA_BASE_URL`
 - `JIRA_EMAIL`
 - `JIRA_API_TOKEN`
-- `JIRA_PROJECT_KEY`
+- optional `JIRA_PROJECT_KEY` override (default source is `state/jira_state.json -> project.key`)
 
 Dry-run:
 

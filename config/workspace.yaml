@@ -56,7 +56,7 @@ configurations:
     items: [WiFi, 5G, 4G, Offline]
 
 shared_steps:
-  # 50 unique titles — step content is generated in workspace_init.py
+  # 50 unique titles — step content is generated in scripts/workspace_init.py
   # cycling three patterns: A (flat), B (2 levels deep), C (1 level deep)
   - "Log in with registered user credentials"
   - "Register new user account via email"
@@ -136,7 +136,7 @@ suite_domain_map:
   "07 Admin":            admin
 
 seed:
-  cases_csv: "QD-2026-02-18.csv"
+  cases_csv: "assets/seed-data/QD-2026-02-18.csv"
   seed_value: 42
 
 simulation:

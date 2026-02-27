@@ -5,7 +5,7 @@ backfill_cf_options.py — one-time prerequisite for case_generator.py
 Fetches custom field option IDs from the Qase API and writes them into
 ``state/workspace_state.json`` under ``custom_fields.{name}.options``.
 
-This is a stopgap until ``workspace_init.py`` (spec 001) is implemented.
+This is a stopgap until ``scripts/workspace_init.py`` (spec 001) is implemented.
 Run this once before running ``case_generator.py`` if the ``options`` key
 is absent from any custom field in state (the case generator will exit
 immediately with a descriptive error if it finds missing options).
@@ -60,7 +60,7 @@ def main() -> None:
     if not custom_fields:
         sys.exit(
             "Error: custom_fields is empty in workspace_state.json. "
-            "Run workspace_init.py first."
+            "Run scripts/workspace_init.py first."
         )
 
     # Determine which fields are missing options
