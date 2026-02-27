@@ -184,8 +184,8 @@ jobs:
               args+=(--max-runs "${{ inputs.max_runs }}")
             fi
           fi
-          printf "args=%q " "${args[@]}" >> "$GITHUB_OUTPUT"
-          echo >> "$GITHUB_OUTPUT"
+          # Serialize as a plain, space-delimited string. Values are numeric/flags.
+          echo "args=${args[*]}" >> "$GITHUB_OUTPUT"
 
       - name: Execute init chain (fail-fast)
         if: inputs.mode == 'init'
