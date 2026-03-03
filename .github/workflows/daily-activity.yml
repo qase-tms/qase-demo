@@ -5,6 +5,9 @@ on:
     - cron: "0 6 * * 1-5"
   workflow_dispatch:
 
+permissions:
+  contents: write   
+
 jobs:
   maintenance:
     uses: ./.github/workflows/workflow-orchestration.yml
