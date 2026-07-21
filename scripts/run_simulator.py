@@ -423,8 +423,22 @@ def _pick_status(
     rng: random.Random,
     is_weak: bool,
     force_green: bool,
+    fail_bias: float = 0.0,
 ) -> str:
     if force_green:
+        return STATUS_PASSED
+    if fail_bias > 0.0:
+        # Deliberately failure-dominant run (e.g. a "broken build" demo run).
+        fail_weight = min(0.95, fail_bias)
+        skip_weight = 0.05
+        if is_weak:
+            fail_weight = min(0.95, fail_weight + 0.10)
+        pass_weight = max(0.0, 1.0 - fail_weight - skip_weight)
+        roll = rng.random()
+        if roll < fail_weight:
+            return STATUS_FAILED
+        if roll < fail_weight + skip_weight:
+            return STATUS_SKIPPED
         return STATUS_PASSED
     pass_weight = 0.85
     fail_weight = 0.12
@@ -523,6 +537,7 @@ def _generate_run_results(
     profile: dict[str, Any],
     templates: dict[str, Any],
     attachment_hashes: list[str],
+    fail_bias: float = 0.0,
 ) -> tuple[list[dict[str, Any]], dict[str, int]]:
     workers_min, workers_max = profile.get("worker_range", [3, 5])
     workers = max(2, rng.randint(int(workers_min), int(workers_max)))
@@ -546,7 +561,7 @@ def _generate_run_results(
         worker_available[worker_idx] = end_time
 
         is_weak = _is_weak_case(case_ctx, weak_suite_title)
-        status = _pick_status(rng, is_weak, force_green)
+        status = _pick_status(rng, is_weak, force_green, fail_bias)
         is_autotest = rng.random() < 0.8
 
         comment_pool = templates.get("result_comments", [])

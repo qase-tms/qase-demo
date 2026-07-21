@@ -36,6 +36,12 @@ Live run:
 
 ## Script 6: maintenance
 
+Each weekday cycle creates the random maintenance runs plus **one guaranteed
+high-failure run** (a deliberately "broken build", tagged `high-failure`).
+All-passed runs are already guaranteed by the existing `force_green` sampling.
+Tune the high-failure run via `config/workspace.yaml -> simulation`:
+`high_failure_fail_bias` (default `0.68`) and `high_failure_tag`.
+
 Required env vars:
 
 - `QASE_API_TOKEN`

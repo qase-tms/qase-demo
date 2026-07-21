@@ -196,6 +196,114 @@ def _parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _execute_run(
+    *,
+    run_idx: int,
+    run_count: int,
+    run_type: str,
+    title: str,
+    description: str,
+    tags: list[str],
+    env_id: int,
+    milestone_id: int,
+    results_payload: list[dict[str, Any]],
+    audit: dict[str, int],
+    project_code: str,
+    token: str,
+    limiter: RateLimiter,
+    jira_project_key: str,
+    weak_suite_title: str,
+    cycle_id: str,
+    dry_run: bool,
+    label: str = "maintenance run",
+) -> dict[str, Any] | None:
+    """Create one Qase run, submit its results, link a Jira issue, and complete it.
+
+    Returns a summary dict on a live run (status 'completed' or 'incomplete'), or
+    None on a dry run (nothing is written and nothing is recorded).
+    """
+    if dry_run:
+        print(
+            f"[DRY-RUN] {label} {run_idx+1}/{run_count} | type={run_type} | title={title!r} "
+            f"| tags={tags} | results={len(results_payload)} | passed={audit['passed']} "
+            f"failed={audit['failed']} skipped={audit['skipped']} manual={audit['manual']} "
+            f"defects={audit['defect']}"
+        )
+        return None
+
+    run_payload = {
+        "title": title,
+        "description": description,
+        "environment_id": env_id,
+        "milestone_id": milestone_id,
+        "tags": tags,
+        "start_time": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    run_resp = _qase_json_request("POST", f"/run/{project_code}", token, limiter, payload=run_payload)
+    run_id = int(((run_resp.get("result") or {}).get("id") or 0))
+    if run_id <= 0:
+        raise SimulationError(f"Create run response missing run id: {run_resp}")
+    print(f"[INFO] Created {label} {run_id}: {title}")
+
+    for start in range(0, len(results_payload), 100):
+        batch = results_payload[start : start + 100]
+        _qase_json_request(
+            "POST",
+            f"/result/{project_code}/{run_id}/bulk",
+            token,
+            limiter,
+            payload={"results": batch},
+        )
+    print(f"[INFO] Submitted {len(results_payload)} results for run {run_id}")
+
+    jira_summary = f"Maintenance follow-up: {title}"
+    jira_desc = (
+        f"Maintenance cycle {cycle_id} run {run_id} validates weekday activity continuity "
+        f"with focus on {weak_suite_title} behavior."
+    )
+    jira_labels = ["qa-maintenance", run_type.lower(), "qase-run"]
+    try:
+        jira_issue = _jira_create_task(
+            jira_summary,
+            jira_desc,
+            jira_labels,
+            limiter,
+            jira_project_key,
+        )
+    except Exception as exc:
+        print(f"[ERROR] Run {run_id} incomplete due to Jira create failure: {exc}")
+        return {"run_id": run_id, "status": "incomplete", "reason": f"jira-create-failed: {exc}"}
+
+    try:
+        _qase_json_request(
+            "POST",
+            f"/run/{project_code}/external-issue",
+            token,
+            limiter,
+            payload={
+                "type": "jira-cloud",
+                "links": [{"run_id": run_id, "external_issue": jira_issue["key"]}],
+            },
+        )
+    except Exception as exc:
+        print(f"[ERROR] Run {run_id} incomplete due to Jira link failure: {exc}")
+        return {"run_id": run_id, "status": "incomplete", "reason": f"jira-link-failed: {exc}"}
+
+    _qase_json_request("POST", f"/run/{project_code}/{run_id}/complete", token, limiter)
+    print(f"[INFO] Completed {label} {run_id} and linked Jira issue {jira_issue['key']}")
+    return {
+        "run_id": run_id,
+        "status": "completed",
+        "jira_issue_key": jira_issue["key"],
+        "result_total": len(results_payload),
+        "passed": audit["passed"],
+        "failed": audit["failed"],
+        "skipped": audit["skipped"],
+        "manual": audit["manual"],
+        "defect": audit["defect"],
+    }
+
+
 def main() -> None:
     args = _parse_args()
     paths = _resolve_paths(args)
@@ -238,6 +346,8 @@ def main() -> None:
     run_count = _choose_run_count(min_runs, max_runs, weights, rng)
     weak_suite_title = str(simulation_cfg.get("weak_suite") or "04 Checkout")
     run_types = list(simulation_cfg.get("run_types") or ["Regression", "Feature", "Smoke"])
+    high_failure_fail_bias = float(simulation_cfg.get("high_failure_fail_bias") or 0.68)
+    high_failure_tag = str(simulation_cfg.get("high_failure_tag") or "high-failure")
 
     now_utc = datetime.now(timezone.utc)
     cycle_id = f"maint-{now_utc.strftime('%Y%m%dT%H%M%S')}-{uuid4().hex[:8]}"
@@ -270,9 +380,12 @@ def main() -> None:
     milestone_ids = [int(v) for v in milestones.values()]
     forced_green_count = max(1, math.ceil(run_count * 0.3))
     forced_green_runs = set(rng.sample(range(run_count), k=min(run_count, forced_green_count)))
+    # One guaranteed high-failure run is appended after the random runs each cycle.
+    total_runs = run_count + 1
 
     print(
-        f"[INFO] Starting maintenance cycle: cycle_id={cycle_id} runs={run_count} seed={seed_value} "
+        f"[INFO] Starting maintenance cycle: cycle_id={cycle_id} runs={total_runs} "
+        f"(random={run_count} + 1 high-failure) seed={seed_value} "
         f"dry_run={args.dry_run} weekday_utc={weekday_allowed}"
     )
 
@@ -290,14 +403,6 @@ def main() -> None:
             selected = rng.sample(case_contexts, k=desired)
             force_green = run_idx in forced_green_runs
 
-            run_payload = {
-                "title": title,
-                "description": description,
-                "environment_id": env_id,
-                "milestone_id": milestone_id,
-                "tags": tags,
-                "start_time": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
-            }
             results_payload, audit = _generate_run_results(
                 rng=rng,
                 case_contexts=selected,
@@ -307,81 +412,72 @@ def main() -> None:
                 templates=templates,
                 attachment_hashes=attachment_hashes,
             )
-            if args.dry_run:
-                print(
-                    f"[DRY-RUN] Run {run_idx+1}/{run_count} | type={run_type} | title={title!r} "
-                    f"| results={len(results_payload)} | passed={audit['passed']} failed={audit['failed']} "
-                    f"skipped={audit['skipped']} manual={audit['manual']} defects={audit['defect']}"
-                )
-                continue
-
-            run_resp = _qase_json_request("POST", f"/run/{project_code}", token, limiter, payload=run_payload)
-            run_id = int(((run_resp.get("result") or {}).get("id") or 0))
-            if run_id <= 0:
-                raise SimulationError(f"Create run response missing run id: {run_resp}")
-            print(f"[INFO] Created maintenance run {run_id}: {title}")
-
-            for start in range(0, len(results_payload), 100):
-                batch = results_payload[start : start + 100]
-                _qase_json_request(
-                    "POST",
-                    f"/result/{project_code}/{run_id}/bulk",
-                    token,
-                    limiter,
-                    payload={"results": batch},
-                )
-            print(f"[INFO] Submitted {len(results_payload)} results for run {run_id}")
-
-            jira_summary = f"Maintenance follow-up: {title}"
-            jira_desc = (
-                f"Maintenance cycle {cycle_id} run {run_id} validates weekday activity continuity "
-                f"with focus on {weak_suite_title} behavior."
+            summary = _execute_run(
+                run_idx=run_idx,
+                run_count=total_runs,
+                run_type=run_type,
+                title=title,
+                description=description,
+                tags=tags,
+                env_id=env_id,
+                milestone_id=milestone_id,
+                results_payload=results_payload,
+                audit=audit,
+                project_code=project_code,
+                token=token,
+                limiter=limiter,
+                jira_project_key=jira_project_key,
+                weak_suite_title=weak_suite_title,
+                cycle_id=cycle_id,
+                dry_run=args.dry_run,
+                label="maintenance run",
             )
-            jira_labels = ["qa-maintenance", run_type.lower(), "qase-run"]
-            try:
-                jira_issue = _jira_create_task(
-                    jira_summary,
-                    jira_desc,
-                    jira_labels,
-                    limiter,
-                    jira_project_key,
-                )
-            except Exception as exc:
-                run_summaries.append({"run_id": run_id, "status": "incomplete", "reason": f"jira-create-failed: {exc}"})
-                print(f"[ERROR] Run {run_id} incomplete due to Jira create failure: {exc}")
-                continue
+            if summary is not None:
+                run_summaries.append(summary)
 
-            try:
-                _qase_json_request(
-                    "POST",
-                    f"/run/{project_code}/external-issue",
-                    token,
-                    limiter,
-                    payload={
-                        "type": "jira-cloud",
-                        "links": [{"run_id": run_id, "external_issue": jira_issue["key"]}],
-                    },
-                )
-            except Exception as exc:
-                run_summaries.append({"run_id": run_id, "status": "incomplete", "reason": f"jira-link-failed: {exc}"})
-                print(f"[ERROR] Run {run_id} incomplete due to Jira link failure: {exc}")
-                continue
-
-            _qase_json_request("POST", f"/run/{project_code}/{run_id}/complete", token, limiter)
-            run_summaries.append(
-                {
-                    "run_id": run_id,
-                    "status": "completed",
-                    "jira_issue_key": jira_issue["key"],
-                    "result_total": len(results_payload),
-                    "passed": audit["passed"],
-                    "failed": audit["failed"],
-                    "skipped": audit["skipped"],
-                    "manual": audit["manual"],
-                    "defect": audit["defect"],
-                }
-            )
-            print(f"[INFO] Completed maintenance run {run_id} and linked Jira issue {jira_issue['key']}")
+        # Guaranteed high-failure run each cycle: a deliberately broken build so the
+        # workspace always shows a red run alongside the healthy ones.
+        hf_run_type = str(rng.choice(run_types))
+        hf_title, hf_description = _pick_title_and_description(rng, hf_run_type, templates, total_runs)
+        hf_tags = _choose_tags(rng, templates, hf_run_type)
+        if high_failure_tag not in hf_tags:
+            hf_tags.append(high_failure_tag)
+        hf_env_id = int(rng.choice(env_ids))
+        hf_milestone_id = int(rng.choice(milestone_ids))
+        hf_desired = rng.randint(35, min(70, len(case_contexts)))
+        hf_selected = rng.sample(case_contexts, k=hf_desired)
+        hf_results, hf_audit = _generate_run_results(
+            rng=rng,
+            case_contexts=hf_selected,
+            weak_suite_title=weak_suite_title,
+            force_green=False,
+            fail_bias=high_failure_fail_bias,
+            profile=timeline_profile,
+            templates=templates,
+            attachment_hashes=attachment_hashes,
+        )
+        hf_summary = _execute_run(
+            run_idx=run_count,
+            run_count=total_runs,
+            run_type=hf_run_type,
+            title=hf_title,
+            description=hf_description,
+            tags=hf_tags,
+            env_id=hf_env_id,
+            milestone_id=hf_milestone_id,
+            results_payload=hf_results,
+            audit=hf_audit,
+            project_code=project_code,
+            token=token,
+            limiter=limiter,
+            jira_project_key=jira_project_key,
+            weak_suite_title=weak_suite_title,
+            cycle_id=cycle_id,
+            dry_run=args.dry_run,
+            label="high-failure run",
+        )
+        if hf_summary is not None:
+            run_summaries.append(hf_summary)
 
         # Re-read workspace state at cycle end to ensure append-only behavior.
         workspace_state_after = _read_json(paths["state"])
@@ -406,7 +502,7 @@ def main() -> None:
             "ended_at_utc": datetime.now(timezone.utc).isoformat(),
             "timezone_basis": "UTC",
             "weekday_allowed": True,
-            "run_count_requested": run_count,
+            "run_count_requested": total_runs,
             "run_count_completed": completed,
             "run_count_incomplete": incomplete,
             "duration_seconds": round(duration, 3),
@@ -418,7 +514,7 @@ def main() -> None:
         ms_state["active_cycle"] = None
         _record_cycle(ms_state, summary)
         print(
-            f"[DONE] Maintenance cycle complete | dry_run={args.dry_run} | requested_runs={run_count} "
+            f"[DONE] Maintenance cycle complete | dry_run={args.dry_run} | requested_runs={total_runs} "
             f"| completed={completed} | incomplete={incomplete} | duration_s={duration:.2f}"
         )
     except Exception as exc:
@@ -432,7 +528,7 @@ def main() -> None:
             "ended_at_utc": datetime.now(timezone.utc).isoformat(),
             "timezone_basis": "UTC",
             "weekday_allowed": True,
-            "run_count_requested": run_count,
+            "run_count_requested": total_runs,
             "run_count_completed": 0,
             "run_count_incomplete": 0,
             "duration_seconds": round(time.monotonic() - started_monotonic, 3),
