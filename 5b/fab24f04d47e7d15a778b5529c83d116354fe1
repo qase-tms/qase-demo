@@ -1,0 +1,19 @@
+docs/superpowers/specs/2026-07-21-high-failure-maintenance-run-design.md
+  s_eea6bded52a1b8::t_7a04b4fdce6cc3 1-76
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "5bfab24f04d47e7d15a778b5529c83d116354fe1",
+  "prompts": {},
+  "sessions": {
+    "s_eea6bded52a1b8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5aed03a5-c76e-42b0-b5d3-a6511ea731dc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Manju R <cskmnrpt@gmail.com>"
+    }
+  }
+}
