@@ -1,0 +1,36 @@
+scripts/run_simulator.py
+  s_eea6bded52a1b8::t_b020f819f9689f 564
+  s_eea6bded52a1b8::t_b7f695ac7f4b29 426,430-441
+  s_eea6bded52a1b8::t_421acc9d36f708 540
+  s_eea6bded52a1b8::t_548932bdc63ff6 442
+scripts/tests/test_run_simulator.py
+  s_eea6bded52a1b8::t_30bb61b34a2774 1-128
+scripts/maintenance.py
+  s_eea6bded52a1b8::t_f70cd59523ca77 505
+  s_eea6bded52a1b8::t_7618719e7b87b4 517
+  s_eea6bded52a1b8::t_3a838c2833cc29 349-350
+  s_eea6bded52a1b8::t_14f170db37ffa5 415-433,435-480
+  s_eea6bded52a1b8::t_861c7ed19ed81c 531
+  s_eea6bded52a1b8::t_c8a81d19f7a34a 199-306
+  s_eea6bded52a1b8::t_0d5a31b1c8073d 383-384,387-388
+scripts/README.md
+  s_eea6bded52a1b8::t_49316911db7680 39-44
+config/workspace.yaml
+  s_eea6bded52a1b8::t_b25ba8c0c09994 148-150
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "93c4b9f12bd5d67509adeb4d5b029ebb6a188b8a",
+  "prompts": {},
+  "sessions": {
+    "s_eea6bded52a1b8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5aed03a5-c76e-42b0-b5d3-a6511ea731dc",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "Manju R <cskmnrpt@gmail.com>"
+    }
+  }
+}
